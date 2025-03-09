@@ -3,681 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Management Dashboard</title>
+    <title>Tronic Shop - Product Management</title>
     <style>
-  :root {
-            --primary-blue: #0077cc;
-            --secondary-orange: #ff6600;
-            --dark-bg: #121212;
-            --light-text: #ff6600;
-            --card-bg: rgba(30, 30, 40, 0.8);
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--light-text);
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
-                              url('/api/placeholder/1200/800');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            padding: 20px;
+            background-color: #000000;
         }
-        
-        header {
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--secondary-orange);
-        }
-        
-        .logo {
-            color: var(--secondary-orange);
-            font-size: 1.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--dark-blue);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 1rem;
-        }
-        
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #ad6200;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #851722;
+        }
+        .tabs {
             display: flex;
-            min-height: calc(100vh - 73px);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #460000;
         }
-        
-        .sidebar {
-            width: 250px;
-            background-color: var(--white);
-            padding: 2rem 0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-        }
-        
-        .menu-item {
-            padding: 0.75rem 2rem;
+        .tab {
+            padding: 10px 20px;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
         }
-        
-        .menu-item.active {
-            background-color: var(--light-blue);
-            border-left: 4px solid var(--primary-blue);
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
             font-weight: bold;
-            color: var(--primary-blue);
         }
-        
-        .menu-item:hover:not(.active) {
-            background-color: var(--light-gray);
+        .tab-content {
+            display: none;
         }
-        
-        .menu-item i {
-            margin-right: 10px;
-            font-size: 1.2rem;
+        .tab-content.active {
+            display: block;
         }
-        
-        .main-content {
-            flex: 1;
-            padding: 2rem;
+        .form-group {
+            margin-bottom: 15px;
         }
-        
-        .page-title {
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
-        
-        .add-product-btn {
-            background-color: var(--primary-orange);
+        input[type="text"], 
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
             border-radius: 4px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s;
+            font-size: 16px;
         }
-        
-        .add-product-btn:hover {
-            background-color: var(--dark-orange);
+        button:hover {
+            background-color: #45a049;
         }
-        
-        .add-product-btn i {
-            margin-right: 0.5rem;
+        button.delete {
+            background-color: #dc3545;
         }
-        
-        .search-filter {
-            margin-bottom: 1.5rem;
-            display: flex;
-            gap: 1rem;
+        button.delete:hover {
+            background-color: #c82333;
         }
-        
-        .search-box {
-            flex: 1;
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        
-        .search-box i {
-            position: absolute;
-            left: 0.8rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-        }
-        
-        .filter-dropdown {
-            min-width: 150px;
-            padding: 0.6rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        
-        .product-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            background-color: rgb(0, 0, 0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            overflow: hidden;
+            margin-top: 20px;
         }
-        
-        .product-table th {
-            background-color: var(--dark-blue);
-            color: white;
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
             text-align: left;
-            padding: 1rem;
         }
-        
-        .product-table tr:nth-child(even) {
-            background-color: var(--light-gray);
+        th {
+            background-color: #f2f2f2;
         }
-        
-        .product-table td {
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid #eee;
+        tr:hover {
+            background-color: #f5f5f5;
         }
-        
-        .stock-status {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        
-        .in-stock {
-            background-color: #e6f4ea;
-            color: #137333;
-        }
-        
-        .out-of-stock {
-            background-color: #fce8e6;
-            color: #c5221f;
-        }
-        
-        .low-stock {
-            background-color: #fef7e0;
-            color: #b06000;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-        
-        .edit-btn {
-            color: var(--primary-blue);
-        }
-        
-        .edit-btn:hover {
-            background-color: var(--light-blue);
-        }
-        
-        .delete-btn {
-            color: #c5221f;
-        }
-        
-        .delete-btn:hover {
-            background-color: #fce8e6;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .modal-header {
+        .nav-buttons {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.6rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .cancel-btn {
-            background-color: #f5f5f5;
-            color: #333;
-            border: 1px solid #ddd;
-            padding: 0.6rem 1.2rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .save-btn {
-            background-color: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .save-btn:hover {
-            background-color: var(--dark-blue);
-        }
-        
-        .pagination {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 1.5rem;
-            align-items: center;
-        }
-        
-        .pagination-info {
-            margin-right: 1rem;
-            color: #666;
-        }
-        
-        .pagination-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .pagination-btn {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
-            cursor: pointer;
-        }
-        
-        .pagination-btn.active {
-            background-color: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-        }
-        
-        /* Toggle Switch for Stock Status */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: var(--primary-orange);
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
+            margin-bottom: 20px;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="logo">ProductMaster</div>
-        <div class="user-info">
-            <span>Admin User</span>
-            <div class="avatar">A</div>
-        </div>
-    </header>
-    
     <div class="container">
-        <div class="sidebar">
-            <div class="menu-item active">
-                <i class="fas fa-box"></i>
-                <span>Products</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-tags"></i>
-                <span>Categories</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-chart-bar"></i>
-                <span>Analytics</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
+        <div class="nav-buttons">
+            <h1>Product Management</h1>
+            <div>
+                <a href="admin_panel.html"><button type="button" style="background-color: #6c757d;">Back to Dashboard</button></a>
+                <a href="logout.inc.php"><button type="button" style="background-color: #dc3545;">Logout</button></a>
             </div>
         </div>
         
-        <div class="main-content">
-            <div class="page-title">
-                <h1>Product Management</h1>
-                <button class="add-product-btn" onclick="openModal()">
-                    <i class="fas fa-plus"></i>
-                    <span>Add Product</span>
-                </button>
-            </div>
-            
-            <div class="search-filter">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search products...">
-                </div>
-                <select class="filter-dropdown">
-                    <option value="all">All Status</option>
-                    <option value="in-stock">In Stock</option>
-                    <option value="out-of-stock">Out of Stock</option>
-                    <option value="low-stock">Low Stock</option>
-                </select>
-                <select class="filter-dropdown">
-                    <option value="all">All Categories</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="furniture">Furniture</option>
-                </select>
-            </div>
-            
-            <table class="product-table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>SKU</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Wireless Bluetooth Headphones</td>
-                        <td>HDP-001</td>
-                        <td>Electronics</td>
-                        <td>$129.99</td>
-                        <td>45</td>
-                        <td><span class="stock-status in-stock">In Stock</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" onclick="openModal(true)"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ultra HD Smart TV 55"</td>
-                        <td>TV-55UHD</td>
-                        <td>Electronics</td>
-                        <td>$899.99</td>
-                        <td>12</td>
-                        <td><span class="stock-status low-stock">Low Stock</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" onclick="openModal(true)"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Premium Leather Office Chair</td>
-                        <td>FRN-CH101</td>
-                        <td>Furniture</td>
-                        <td>$249.99</td>
-                        <td>0</td>
-                        <td><span class="stock-status out-of-stock">Out of Stock</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" onclick="openModal(true)"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Men's Cotton T-Shirt</td>
-                        <td>CL-TS001</td>
-                        <td>Clothing</td>
-                        <td>$24.99</td>
-                        <td>89</td>
-                        <td><span class="stock-status in-stock">In Stock</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" onclick="openModal(true)"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Stainless Steel Water Bottle</td>
-                        <td>KTN-WB12</td>
-                        <td>Kitchen</td>
-                        <td>$19.99</td>
-                        <td>0</td>
-                        <td><span class="stock-status out-of-stock">Out of Stock</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit-btn" onclick="openModal(true)"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="pagination">
-                <div class="pagination-info">Showing 1-5 of 24 items</div>
-                <div class="pagination-controls">
-                    <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="pagination-btn active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
+        <!-- Status Messages -->
+        <div id="message" class="message" style="display: none;"></div>
+        
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('add-product')">Add Product</div>
+            <div class="tab" onclick="showTab('view-products')">View/Edit Products</div>
         </div>
-    </div>
-    
-    <!-- Add/Edit Product Modal -->
-    <div class="modal" id="productModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Add New Product</h2>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="form-group">
-                <label for="productName">Product Name</label>
-                <input type="text" id="productName" placeholder="Enter product name">
-            </div>
-            <div class="form-row">
+        
+        <!-- Add Product Form -->
+        <div id="add-product" class="tab-content active">
+            <h2>Add New Product</h2>
+            <form action="product_management.inc.php" method="post">
+                <input type="hidden" name="action" value="add">
+                
                 <div class="form-group">
-                    <label for="productSKU">SKU</label>
-                    <input type="text" id="productSKU" placeholder="Enter SKU">
+                    <label for="prod_name">Product Name *</label>
+                    <input type="text" id="prod_name" name="prod_name" required>
                 </div>
+                
                 <div class="form-group">
-                    <label for="productCategory">Category</label>
-                    <select id="productCategory">
-                        <option value="">Select category</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="clothing">Clothing</option>
-                        <option value="furniture">Furniture</option>
-                        <option value="kitchen">Kitchen</option>
+                    <label for="prod_desc">Description</label>
+                    <textarea id="prod_desc" name="prod_desc"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Smartphones">Smartphones</option>
+                        <option value="Laptops">Laptops</option>
+                        <option value="Tablets">Tablets</option>
+                        <option value="Audio">Audio</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-row">
+                
                 <div class="form-group">
-                    <label for="productPrice">Price ($)</label>
-                    <input type="number" id="productPrice" placeholder="Enter price" step="0.01">
+                    <label for="price">Price (KSh) *</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" required>
                 </div>
+                
                 <div class="form-group">
-                    <label for="productStock">Stock Quantity</label>
-                    <input type="number" id="productStock" placeholder="Enter quantity">
+                    <label for="stock_quantity">Stock Quantity *</label>
+                    <input type="number" id="stock_quantity" name="stock_quantity" min="0" required>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="productDescription">Description</label>
-                <textarea id="productDescription" placeholder="Enter product description"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Stock Status</label>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <label class="switch">
-                        <input type="checkbox" id="stockToggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                    <span id="stockStatusLabel">In Stock</span>
+                
+                <div class="form-group">
+                    <label for="manufacturer">Manufacturer</label>
+                    <input type="text" id="manufacturer" name="manufacturer">
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-                <button class="save-btn">Save Product</button>
+                
+                <div class="form-group">
+                    <label for="release_date">Release Date</label>
+                    <input type="date" id="release_date" name="release_date">
+                </div>
+                
+                <button type="submit">Add Product</button>
+            </form>
+        </div>
+        
+        <!-- View/Edit Products -->
+        <div id="view-products" class="tab-content">
+            <h2>Manage Products</h2>
+            <div id="products-list">
+                <!-- Product list will be loaded here via AJAX -->
             </div>
         </div>
     </div>
     
     <script>
-        // Modal functionality
-        const modal = document.getElementById('productModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const stockToggle = document.getElementById('stockToggle');
-        const stockStatusLabel = document.getElementById('stockStatusLabel');
-        
-        function openModal(isEdit = false) {
-            modal.style.display = 'flex';
-            if (isEdit) {
-                modalTitle.textContent = 'Edit Product';
-                // Here you would normally populate the form with the product data
-            } else {
-                modalTitle.textContent = 'Add New Product';
-                // Reset form
+        // Function to show the selected tab
+        function showTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show selected tab content and mark tab as active
+            document.getElementById(tabId).classList.add('active');
+            
+            // Find the tab button that corresponds to this content
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].textContent.toLowerCase().includes(tabId.replace('-', ' '))) {
+                    tabs[i].classList.add('active');
+                }
+            }
+            
+            // If view products tab is selected, load products
+            if (tabId === 'view-products') {
+                loadProducts();
             }
         }
         
-        function closeModal() {
-            modal.style.display = 'none';
+        // Function to load products via AJAX
+        function loadProducts() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'get_products.php', true);
+            
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    document.getElementById('products-list').innerHTML = this.responseText;
+                }
+            };
+            
+            xhr.send();
         }
         
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                closeModal();
+        // Function to handle URL parameters for status messages
+        function handleStatusMessages() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const action = urlParams.get('action');
+            const messageElement = document.getElementById('message');
+            
+            if (status) {
+                messageElement.style.display = 'block';
+                
+                if (status === 'success') {
+                    messageElement.classList.add('success');
+                    messageElement.classList.remove('error');
+                    
+                    let actionText = '';
+                    switch(action) {
+                        case 'add':
+                            actionText = 'added';
+                            break;
+                        case 'update':
+                            actionText = 'updated';
+                            break;
+                        case 'delete':
+                            actionText = 'deleted';
+                            break;
+                    }
+                    
+                    messageElement.textContent = `Product successfully ${actionText}!`;
+                } else if (status === 'error') {
+                    messageElement.classList.add('error');
+                    messageElement.classList.remove('success');
+                    messageElement.textContent = urlParams.get('message') || 'An error occurred.';
+                }
+                
+                // Hide message after 5 seconds
+                setTimeout(function() {
+                    messageElement.style.display = 'none';
+                }, 5000);
             }
         }
         
-        // Toggle stock status
-        stockToggle.addEventListener('change', function() {
-            if (this.checked) {
-                stockStatusLabel.textContent = 'In Stock';
-            } else {
-                stockStatusLabel.textContent = 'Out of Stock';
+        // Execute when page loads
+        window.onload = function() {
+            handleStatusMessages();
+            
+            // Check if view-products is in the URL
+            if (window.location.hash === '#view-products') {
+                showTab('view-products');
             }
-        });
+        };
     </script>
 </body>
 </html>
