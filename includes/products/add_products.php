@@ -3,11 +3,12 @@
 session_start();
 require_once 'config.php';
 
-// Protect page – only allow admins
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.html");
-    exit();
-}
+ // Allow all users to add products
+// if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+//     header("Location: login.html");
+//     exit();
+// }
+
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -25,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $conn->prepare("INSERT INTO products (prod_name, prod_desc, category, price, stock_quantity, manufacturer, release_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("sssdiss", $prod_name, $prod_desc, $category, $price, $stock_quantity, $manufacturer, $release_date);
         if ($stmt->execute()) {
-            header("Location: admin_panel.html");
+            header("Location: user_view.html");
+
             exit();
         } else {
             $error = "Error adding product: " . $conn->error;

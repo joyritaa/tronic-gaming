@@ -3,14 +3,14 @@
 session_start();
 require_once 'config.php';
 
-// Protect page – only allow admins
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.html");
-    exit();
-}
+// Allow all users to edit products
+// if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+//     header("Location: login.html");
+//     exit();
+// }
 
 if (!isset($_GET['id'])) {
-    header("Location: admin_panel.html");
+    header("Location: user_view.html");
     exit();
 }
 
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $conn->prepare("UPDATE products SET prod_name = ?, prod_desc = ?, category = ?, price = ?, stock_quantity = ?, manufacturer = ?, release_date = ? WHERE product_id = ?");
         $stmt->bind_param("sssdissi", $prod_name, $prod_desc, $category, $price, $stock_quantity, $manufacturer, $release_date, $product_id);
         if ($stmt->execute()) {
-            header("Location: admin_panel.html");
+            header("Location: user_view.html");
             exit();
         } else {
             $error = "Error updating product: " . $conn->error;
