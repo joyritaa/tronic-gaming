@@ -11,7 +11,8 @@
         <div class="logo">Tronic</div>
         <div class="user-controls">
             <div class="user-info" id="userInfo">Welcome, User</div>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
+<button class="logout-btn" id="logoutBtn" onclick="location.href='includes/logout.php'">Logout</button>
+
         </div>
     </header>
     
@@ -45,7 +46,11 @@
         </div>
         
         <div class="inventory-grid" id="inventoryGrid">
-            <!-- Products will be dynamically added here -->
+<!-- Products will be dynamically added here -->
+<button class="card-button" id="addProductBtn" onclick="location.href='includes/products/add_products.php'">Add Product</button>
+<button class="card-button" id="editProductBtn" onclick="location.href='includes/products/edit_products.php'">Edit Product</button>
+<button class="card-button" id="deleteProductBtn" onclick="location.href='includes/products/delete_products.php'">Delete Product</button>
+
         </div>
     </main>
     
