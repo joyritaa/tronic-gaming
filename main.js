@@ -1,13 +1,13 @@
 // Replace localStorage with AJAX calls
 document.addEventListener('DOMContentLoaded', function() {
-    // Check session storage for logged in admin
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    
-    // If no user is logged in or the user is not an admin, redirect to login page
-    if (!currentUser || currentUser.role !== 'admin') {
-        window.location.href = 'login.html';
-        return;
-    }
+   // Check session storage for logged in admin
+const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+// If no user is logged in, redirect to login page
+if (!currentUser) {
+    window.location.href = 'login.html';
+    return;
+}
     
     // Update user info in header
     document.getElementById('userInfo').textContent = `Welcome, ${currentUser.username}`;

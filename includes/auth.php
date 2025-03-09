@@ -23,7 +23,7 @@ switch($action) {
         
         if($row = mysqli_fetch_assoc($result)) {
             // Verify password (use password_verify if passwords are hashed)
-            if($password == $row['password']) { // In production, use password_verify()
+            if($password == $row['admin_pass']) { // In production, use password_verify()
                 // Add a role field for frontend consistency
                 $row['role'] = 'admin'; // Adding this manually since we need it in the frontend
                 echo json_encode(['success' => true, 'user' => $row]);
