@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"> Tronic</div>
+        <div class="user-info">
+            <span>Admin User</span>
+        </div>
+    </header>
+    
+    <div class="container">
+        
+            <div class="menu-item active">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Categories</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analytics</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+        
+        <div class="main-content">
+            <div class="page-title">
+                <h1>Product Management</h1>
+                <button class="add-product-btn" onclick="openModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Product</span>
+                </button>
+            </div>
+            
+            <div class="search-filter">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search products...">
+                </div>
+                <select class="filter-dropdown">
+                    <option value="all">All Status</option>
+                    <option value="in-stock">In Stock</option>
+                    <option value="out-of-stock">Out of Stock</option>
+                    <option value="low-stock">Low Stock</option>
+                </select>
+                <select class="filter-dropdown">
+                    <option value="all">All Categories</option>
+                    <option value="electronics">Conosles</option>
+                    <option value="clothing">Gaming</option>
+                    <option value="furniture">Accessories</option>
+                </select>
+            </div>
+            
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>product Name</th>
+                        <th>prod_desc</th>
+                        <th>category</th>
+                        <th>price</th>
+                        <th>stock_quantity</th>
+                        <th>manufacurer</th>
+                        <th>release_date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                       //whatever is on the product table in html
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="pagination">
+                <div class="pagination-info">Showing 1-5 of 24 items</div>
+                <div class="pagination-controls">
+                    <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Product</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="text" id="productName" placeholder="Enter product name">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="productSKU">SKU</label>
+                    <input type="text" id="productSKU" placeholder="Enter SKU">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory">
+                        <option value="">Select category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="kitchen">Kitchen</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="productPrice">Price ($)</label>
+                    <input type="number" id="productPrice" placeholder="Enter price" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="productStock">Stock Quantity</label>
+                    <input type="number" id="productStock" placeholder="Enter quantity">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productDescription">Description</label>
+                <textarea id="productDescription" placeholder="Enter product description"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Stock Status</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label class="switch">
+                        <input type="checkbox" id="stockToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <span id="stockStatusLabel">In Stock</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button class="save-btn">Save Product</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('productModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const stockToggle = document.getElementById('stockToggle');
+        const stockStatusLabel = document.getElementById('stockStatusLabel');
+        
+        function openModal(isEdit = false) {
+            modal.style.display = 'flex';
+            if (isEdit) {
+                modalTitle.textContent = 'Edit Product';
+                // Here you would normally populate the form with the product data
+            } else {
+                modalTitle.textContent = 'Add New Product';
+                // Reset form
+            }
+        }
+        
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Toggle stock status
+        stockToggle.addEventListener('change', function() {
+            if (this.checked) {
+                stockStatusLabel.textContent = 'In Stock';
+            } else {
+                stockStatusLabel.textContent = 'Out of Stock';
+            }
+        });
+    </script>
+</body>
+</html>
