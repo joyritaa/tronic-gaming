@@ -60,34 +60,6 @@
             100% { transform: translateY(100%); }
         }
         
-        .logo {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            color: var(--light-text);
-        }
-        
-        .logo span:first-child {
-            color: var(--primary-blue);
-            text-shadow: 0 0 10px var(--primary-blue-glow);
-        }
-        
-        .logo span:last-child {
-            color: var(--secondary-orange);
-            text-shadow: 0 0 10px var(--secondary-orange-glow);
-        }
-        
-        .gaming-icon {
-            font-size: 2rem;
-            margin-right: 10px;
-        }
         
         .login-container {
             background-color: var(--card-bg);
@@ -161,7 +133,7 @@
             position: relative;
         }
         
-        .form-group label {
+        label {
             display: block;
             margin-bottom: 8px;
             font-size: 0.9rem;
@@ -229,100 +201,82 @@
             left: 100%;
         }
         
-        .gaming-elements {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        
-        .game-icon {
-            position: absolute;
-            opacity: 0.15;
-            font-size: 2.5rem;
-            color: var(--primary-blue);
-        }
-        
-        .game-icon:nth-child(odd) {
-            color: var(--secondary-orange);
-        }
-        
-        .game-icon:nth-child(1) { top: 10%; left: 10%; animation: float 15s ease-in-out infinite; }
-        .game-icon:nth-child(2) { top: 15%; right: 10%; animation: float 12s ease-in-out infinite 1s; }
-        .game-icon:nth-child(3) { bottom: 20%; left: 15%; animation: float-rotate 20s ease-in-out infinite 2s; }
-        .game-icon:nth-child(4) { bottom: 15%; right: 15%; animation: float-rotate 17s ease-in-out infinite 1.5s; }
-        .game-icon:nth-child(5) { top: 50%; left: 20%; animation: float 14s ease-in-out infinite 3s; }
-        .game-icon:nth-child(6) { top: 60%; right: 20%; animation: float-rotate 18s ease-in-out infinite 2.5s; }
-        
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0); }
-            50% { transform: translateY(-30px) rotate(5deg); }
-            100% { transform: translateY(0) rotate(0); }
-        }
-        
-        @keyframes float-rotate {
-            0% { transform: translateY(0) rotate(0); }
-            50% { transform: translateY(-20px) rotate(20deg); }
-            100% { transform: translateY(0) rotate(0); }
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Tronic Gaming Inventory Login</h2>
-        <form id="loginForm">
+        <h1>Tronic Shop Login</h1>
+        
+        <!-- Error messages -->
+        <div id="error-message" class="error">
+            
+            <?php
+            if (isset($_GET['error'])) {
+                if ($_GET['error'] == "emptyfields") {
+                    echo "Fill in all fields!";
+                } else if ($_GET['error'] == "wrongpassword") {
+                    echo "Wrong password!";
+                } else if ($_GET['error'] == "nouser") {
+                    echo "User does not exist!";
+                } else if ($_GET['error'] == "sqlerror") {
+                    echo "Database error. Please try again later.";
+                }
+            }
+            ?>
+        </div>
+        
+        <form action="login.inc.php" method="post">
             <div class="form-group">
-                <label for="username">Username</label>
+                <label for="user-type">Login as:</label>
+                <select name="user-type" id="user-type">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" name="login-submit">Login</button>
         </form>
     </div>
-
+    
     <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        loginUser(true);
-    });
-       
-        function loginUser(isAdmin){
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-    //determine what endpoint to use
-    const action=  isAdmin ? 'admin_login' : 'user_login';
-        
-        // Create form data
-        const formData = new FormData();
-        formData.append('username', username);
-        formData.append('password', password);
-        
-        // Send login request specifically for admin login
-        fetch('auth.php?action=admin_login', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                // Store admin user in session storage
-                localStorage.setItem('user', JSON.stringify(data.user));
-            // Redirect to appropriate dashboard
-            window.location.href = isAdmin ? 'admin_panel.html' : 'user_view.html';
-            } else {
-                alert(data.message);
+        // JavaScript to handle the URL parameters for error messages
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorType = urlParams.get('error');
+            
+            if (errorType) {
+                const errorElement = document.getElementById('error-message');
+                
+                switch(errorType) {
+                    case 'emptyfields':
+                        errorElement.textContent = 'Please fill in all fields!';
+                        break;
+                    case 'wrongpassword':
+                        errorElement.textContent = 'Incorrect password!';
+                        break;
+                    case 'nouser':
+                        errorElement.textContent = 'User does not exist!';
+                        break;
+                    case 'sqlerror':
+                        errorElement.textContent = 'Database error. Please try again later.';
+                        break;
+                    default:
+                        errorElement.textContent = '';
+                }
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    };
+        };
     </script>
 </body>
 </html>
