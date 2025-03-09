@@ -1,6 +1,6 @@
 <?php
 // Include database connection from includes folder
-require_once 'includes/dbh.inc.php';
+require_once 'dbh.inc.php';
 
 // Set header to return JSON
 header('Content-Type: application/json');
