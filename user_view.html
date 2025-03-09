@@ -47,11 +47,21 @@
         
         <div class="inventory-grid" id="inventoryGrid">
 <!-- Products will be dynamically added here -->
-<button class="card-button" id="addProductBtn" onclick="location.href='includes/products/add_products.php'">Add Product</button>
-<button class="card-button" id="editProductBtn" onclick="location.href='includes/products/edit_products.php'">Edit Product</button>
-<button class="card-button" id="deleteProductBtn" onclick="location.href='includes/products/delete_products.php'">Delete Product</button>
 
-        </div>
+    <div class="admin-card">
+        <div class="card-icon">🎮</div>
+        <h2>Product Management</h2>
+        <p>Add, edit, or remove products from the inventory system.</p>
+        <button class="card-button" id="productManagementBtn" >Manage Products</button>
+        <script>
+            document.getElementById('productManagementBtn').addEventListener('click', () => {
+                window.location.href = 'product_management.html';
+            });
+            </script>
+    </div>
+
+
+    </div>
     </main>
     
     <script src="script.js"></script>

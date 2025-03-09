@@ -42,7 +42,12 @@
                 <div class="card-icon">👥</div>
                 <h2>User Management</h2>
                 <p>Add new users, edit existing users, or remove users from the system.</p>
-                <button class="card-button" id="userManagementBtn" href='user_management.html'>Manage Users</button>
+                <button class="card-button" id="userManagementBtn">Manage Users</button>
+                <script>
+                    document.getElementById('userManagementBtn').addEventListener('click', () => {
+                        window.location.href = 'user_management.html';
+                    });
+                </script>
 
             </div>
             
@@ -50,7 +55,12 @@
                 <div class="card-icon">🎮</div>
                 <h2>Product Management</h2>
                 <p>Add, edit, or remove products from the inventory system.</p>
-                <button class="card-button" id="productManagementBtn" href='product_management.html'>Manage Products</button>
+                <button class="card-button" id="productManagementBtn" >Manage Products</button>
+                <script>
+                    document.getElementById('productManagementBtn').addEventListener('click', () => {
+                        window.location.href = 'product_management.html';
+                    });
+                    </script>
             </div>
         </div>
     </main>
