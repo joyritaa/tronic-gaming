@@ -14,7 +14,7 @@ switch($action) {
         $username = isset($_POST['username']) ? $_POST['username'] : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
         
-        // Query admin table without checking role
+        // Query admin table
         $sql = "SELECT * FROM Admins WHERE username = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "s", $username);
@@ -23,9 +23,7 @@ switch($action) {
         
         if($row = mysqli_fetch_assoc($result)) {
             // Verify password (use password_verify if passwords are hashed)
-            if($password == $row['admin_pass']) { // In production, use password_verify()
-                // Add a role field for frontend consistency
-                $row['role'] = 'admin'; // Adding this manually since we need it in the frontend
+            if($password == $row['password_hash']) { // In production, use password_verify()
                 echo json_encode(['success' => true, 'user' => $row]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Invalid password']);
@@ -35,6 +33,31 @@ switch($action) {
         }
         break;
         
+
+        case 'user login':
+            // Get POST data
+            $username = isset($_POST['username']) ? $_POST['username'] : '';
+            $password = isset($_POST['password']) ? $_POST['password'] : '';
+            
+            // Query users table including role information
+            $sql = "SELECT * FROM Users WHERE username = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            
+            if($row = mysqli_fetch_assoc($result)) {
+                // Verify password (use password_verify if passwords are hashed)
+                if($password == $row['password_hash']) { // In production, use password_verify()
+                    echo json_encode(['success' => true, 'user' => $row]);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Invalid password']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'User not found']);
+            }
+            break;
+
     default:
         echo json_encode(['error' => 'Invalid action']);
 }

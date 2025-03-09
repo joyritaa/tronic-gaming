@@ -6,138 +6,267 @@
     <title>Tronic Gaming Inventory - Login</title>
     <style>
         :root {
-            --primary-blue: #0077cc;
-            --secondary-orange: #ff6600;
-            --dark-bg: #121212;
+            --primary-blue: #1e90ff;
+            --primary-blue-glow: rgba(30, 144, 255, 0.6);
+            --secondary-orange: #ff7700;
+            --secondary-orange-glow: rgba(255, 119, 0, 0.6);
+            --dark-bg: #0a0a0a;
+            --card-bg: #121212;
             --light-text: #f0f0f0;
+            --input-bg: rgba(30, 30, 40, 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--dark-bg);
             color: var(--light-text);
-            margin: 0;
-            padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                              url('/api/placeholder/1200/800');
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--primary-blue-glow) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, var(--secondary-orange-glow) 0%, transparent 20%),
+                linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+                url('/api/placeholder/1200/800');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, transparent 0%, rgba(30, 144, 255, 0.1) 50%, transparent 100%);
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        
+        .logo {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+        }
+        
+        .logo span:first-child {
+            color: var(--primary-blue);
+            text-shadow: 0 0 10px var(--primary-blue-glow);
+        }
+        
+        .logo span:last-child {
+            color: var(--secondary-orange);
+            text-shadow: 0 0 10px var(--secondary-orange-glow);
+        }
+        
+        .gaming-icon {
+            font-size: 2rem;
+            margin-right: 10px;
         }
         
         .login-container {
-            background-color: rgba(25, 25, 25, 0.9);
+            background-color: var(--card-bg);
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 119, 204, 0.5);
+            border-radius: 12px;
+            box-shadow: 
+                0 0 20px rgba(0, 0, 0, 0.5),
+                0 0 30px var(--primary-blue-glow),
+                0 0 50px var(--secondary-orange-glow);
             width: 100%;
             max-width: 400px;
             text-align: center;
-            border: 1px solid var(--primary-blue);
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease-out;
         }
         
-        .login-header {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-blue), var(--secondary-orange), var(--primary-blue));
+            z-index: -1;
+            border-radius: 14px;
+            opacity: 0.4;
+            animation: border-glow 3s linear infinite;
+        }
+        
+        @keyframes border-glow {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+        
+        .login-container h2 {
+            color: var(--light-text);
             margin-bottom: 30px;
-        }
-        
-        .login-header h1 {
-            color: var(--secondary-orange);
-            margin-bottom: 10px;
-            font-size: 2.2rem;
+            font-size: 2rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
         }
         
-        .login-header p {
+        .login-container h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-orange));
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
             color: var(--light-text);
-            font-size: 1rem;
+            opacity: 0.8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
-        .login-form input {
+        .form-group input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
+            padding: 15px;
             border: none;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background-color: var(--input-bg);
             color: var(--light-text);
             font-size: 1rem;
-            box-sizing: border-box;
-            border: 1px solid transparent;
             transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .login-form input:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: var(--secondary-orange);
-            box-shadow: 0 0 10px rgba(255, 102, 0, 0.3);
+            box-shadow: 0 0 0 2px var(--primary-blue);
+            border-color: var(--primary-blue);
         }
         
-        .login-form button {
+        button[type="submit"] {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: none;
-            border-radius: 5px;
-            background-color: var(--secondary-orange);
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-orange));
             color: white;
             font-size: 1rem;
             cursor: pointer;
             text-transform: uppercase;
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             transition: all 0.3s;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
         }
         
-        .login-form button:hover {
-            background-color: #ff8533;
-            box-shadow: 0 0 15px rgba(255, 102, 0, 0.5);
-        }
-        
-        .error-message {
-            color: #ff3333;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            display: none;
-        }
-        
-        .game-decoration {
+        button[type="submit"]::before {
+            content: '';
             position: absolute;
-            width: 50px;
-            height: 50px;
-            opacity: 0.7;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s;
         }
         
-        .game-decoration:nth-child(1) {
-            top: 10%;
-            left: 10%;
-            animation: float 8s ease-in-out infinite;
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 20px rgba(0, 0, 0, 0.3),
+                0 0 15px var(--primary-blue-glow);
         }
         
-        .game-decoration:nth-child(2) {
-            top: 15%;
-            right: 10%;
-            animation: float 10s ease-in-out infinite;
+        button[type="submit"]:hover::before {
+            left: 100%;
         }
         
-        .game-decoration:nth-child(3) {
-            bottom: 10%;
-            left: 15%;
-            animation: float 9s ease-in-out infinite;
+        .gaming-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
         }
         
-        .game-decoration:nth-child(4) {
-            bottom: 15%;
-            right: 15%;
-            animation: float 11s ease-in-out infinite;
+        .game-icon {
+            position: absolute;
+            opacity: 0.15;
+            font-size: 2.5rem;
+            color: var(--primary-blue);
         }
+        
+        .game-icon:nth-child(odd) {
+            color: var(--secondary-orange);
+        }
+        
+        .game-icon:nth-child(1) { top: 10%; left: 10%; animation: float 15s ease-in-out infinite; }
+        .game-icon:nth-child(2) { top: 15%; right: 10%; animation: float 12s ease-in-out infinite 1s; }
+        .game-icon:nth-child(3) { bottom: 20%; left: 15%; animation: float-rotate 20s ease-in-out infinite 2s; }
+        .game-icon:nth-child(4) { bottom: 15%; right: 15%; animation: float-rotate 17s ease-in-out infinite 1.5s; }
+        .game-icon:nth-child(5) { top: 50%; left: 20%; animation: float 14s ease-in-out infinite 3s; }
+        .game-icon:nth-child(6) { top: 60%; right: 20%; animation: float-rotate 18s ease-in-out infinite 2.5s; }
         
         @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+            0% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0); }
+        }
+        
+        @keyframes float-rotate {
+            0% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-20px) rotate(20deg); }
+            100% { transform: translateY(0) rotate(0); }
         }
     </style>
 </head>
