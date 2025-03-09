@@ -416,14 +416,36 @@ function handleDeleteUser(e) {
         admins.splice(index, 1);
     }
     
-    // Save updated data
-    localStorage.setItem('usersData', JSON.stringify(users));
-    localStorage.setItem('adminsData', JSON.stringify(admins));
-    
     // Update display
     displayUsers(users, admins);
     
     showSuccessMessage('User deleted successfully');
+}
+
+function handleDeleteProduct(productId) {
+    if (!confirm('Are you sure you want to delete this product?')) {
+        return;
+    }
+
+    // AJAX call to delete product
+    const url = `includes/products/delete_product.php?id=${productId}`;
+    fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccessMessage(data.message);
+            // Optionally, refresh the product list
+            displayProducts(data.products);
+        } else {
+            showErrorMessage(data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 function handleUserSearch(e) {

@@ -146,12 +146,46 @@
             </div>
             <div class="modal-footer">
                 <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-                <button class="save-btn">Save Product</button>
+<button class="save-btn" onclick="addProduct()">Save Product</button>
+
             </div>
         </div>
     </div>
     
-    <script>
+<script>
+    function addProduct() {
+        const productData = {
+            name: document.getElementById('productName').value,
+            sku: document.getElementById('productSKU').value,
+            category: document.getElementById('productCategory').value,
+            price: parseFloat(document.getElementById('productPrice').value),
+            stock: parseInt(document.getElementById('productStock').value),
+            description: document.getElementById('productDescription').value,
+            inStock: document.getElementById('stockToggle').checked
+        };
+
+        // AJAX call to add product
+        const url = 'includes/products/add_product.php';
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessMessage(data.message);
+                // Optionally, refresh the product list or close the modal
+                closeModal();
+            } else {
+                showErrorMessage(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
         // Modal functionality
         const modal = document.getElementById('productModal');
         const modalTitle = document.getElementById('modalTitle');
