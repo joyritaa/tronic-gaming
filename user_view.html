@@ -3,374 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User View - Tronic Shop</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000000; /* Black background */
-            color: #ffffff; /* White text */
-            padding: 20px;
-        }
-        h1 {
-            color: #1e90ff; /* Blue color for the heading */
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #121212; /* Dark card background */
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-        a {
-            color: #1e90ff; /* Blue links */
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .logo {
-            color: var(--secondary-orange);
-            font-size: 1.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .user-controls {
-            display: flex;
-            align-items: center;
-        }
-        
-        .user-info {
-            margin-right: 20px;
-            color: var(--light-text);
-        }
-        
-        .logout-btn {
-            background-color: var(--secondary-orange);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .logout-btn:hover {
-            background-color: #ff8533;
-            box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
-        }
-        
-        main {
-            padding: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            color: var(--secondary-orange);
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .filter-controls {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-            border: 1px solid var(--primary-blue);
-        }
-        
-        .filter-controls select,
-        .filter-controls input {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #444;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--light-text);
-        }
-        
-        .filter-controls label {
-            margin-right: 10px;
-        }
-        
-        .filter-item {
-            display: flex;
-            align-items: center;
-        }
-        
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        
-        .product-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #333;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 119, 204, 0.3);
-        }
-        
-        .product-img {
-            height: 180px;
-            width: 100%;
-            background-color: #1d1d1d;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: var(--secondary-orange);
-        }
-        
-        .product-details {
-            padding: 20px;
-        }
-        
-        .product-name {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: white;
-        }
-        
-        .product-category {
-            display: inline-block;
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-bottom: 15px;
-        }
-        
-        .product-price {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--secondary-orange);
-            margin-bottom: 15px;
-        }
-        
-        .stock-status {
-            padding: 8px 12px;
-            border-radius: 5px;
-            display: inline-block;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        .in-stock {
-            background-color: rgba(0, 160, 70, 0.3);
-            color: #00e676;
-            border: 1px solid #00a047;
-        }
-        
-        .out-of-stock {
-            background-color: rgba(200, 0, 0, 0.3);
-            color: #ff6b6b;
-            border: 1px solid #c80000;
-        }
-        
-        .quantity-info {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-        
-        .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            border: 1px dashed #444;
-        }
-        
-        @media (max-width: 768px) {
-            .filter-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filter-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .filter-controls select,
-            .filter-controls input {
-                width: 100%;
-                margin-top: 5px;
-            }
-        }
-    </style>
+    <title>Gaming Gadgets Inventory</title>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="logo">GameStore</div>
-        <div class="user-controls">
-            <div class="user-info" id="userInfo">Welcome, User</div>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <h1>Tronic Gaming Inventory</h1>
+            <div class="nav-links">
+                <a href="user_view.html">Users dashboard</a>
+                <a href="admin_panel.html">Admin Panel</a>
+                <a href="login.html">Login</a>
+            </div>
         </div>
-    </header>
-    
-    <main>
-        <h1>Game Inventory</h1>
-        
-        <div class="filter-controls">
-            <div class="filter-item">
-                <label for="categoryFilter">Category:</label>
-                <select id="categoryFilter">
-                    <option value="all">All Categories</option>
-                    <option value="Console">Consoles</option>
-                    <option value="Game">Games</option>
-                    <option value="Accessory">Accessories</option>
-                    <option value="Furniture">Furniture</option>
-                    <option value="Computer">Computers</option>
+    </nav>
+
+    <main class="main-container">
+        <section class="search-section">
+            <div class="search-content">
+                <input type="text" placeholder="Search products...">
+                <select>
+                    <option value="">All Categories</option>
+                    <option value="consoles">Gaming Consoles</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="peripherals">Peripherals</option>
                 </select>
+                <button class="search-button">Search</button>
             </div>
-            
-            <div class="filter-item">
-                <label for="stockFilter">Availability:</label>
-                <select id="stockFilter">
-                    <option value="all">All Items</option>
-                    <option value="inStock">In Stock Only</option>
-                    <option value="outOfStock">Out of Stock Only</option>
-                </select>
-            </div>
-            
-            <div class="filter-item">
-                <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" placeholder="Search products...">
-            </div>
-        </div>
-        
-        <div class="inventory-grid" id="inventoryGrid">
-            <!-- Products will be dynamically added here -->
-        </div>
-    </main>
-    
-    <script>
-        // Check if user is logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-            
-            // If no user is logged in or the user is an admin, redirect to login page
-            if (!currentUser || currentUser.role === 'admin') {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            // Update user info in header
-            document.getElementById('userInfo').textContent = `Welcome, ${currentUser.username}`;
-            
-            // Get inventory data from localStorage
-            const inventory = JSON.parse(localStorage.getItem('inventoryData'));
-            
-            // Display all products initially
-            displayProducts(inventory);
-            
-            // Set up event listeners for filters
-            document.getElementById('categoryFilter').addEventListener('change', filterProducts);
-            document.getElementById('stockFilter').addEventListener('change', filterProducts);
-            document.getElementById('searchInput').addEventListener('input', filterProducts);
-            
-            // Logout button handler
-            document.getElementById('logoutBtn').addEventListener('click', function() {
-                sessionStorage.removeItem('currentUser');
-                window.location.href = 'login.html';
-            });
-        });
-        
-        function displayProducts(products) {
-            const inventoryGrid = document.getElementById('inventoryGrid');
-            inventoryGrid.innerHTML = '';
-            
-            if (products.length === 0) {
-                inventoryGrid.innerHTML = '<div class="no-results">No products match your search criteria.</div>';
-                return;
-            }
-            
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                
-                // Get emoji based on category
-                let categoryEmoji = '🎮';
-                switch (product.category) {
-                    case 'Console': categoryEmoji = '🎮'; break;
-                    case 'Game': categoryEmoji = '💿'; break;
-                    case 'Accessory': categoryEmoji = '🎧'; break;
-                    case 'Furniture': categoryEmoji = '🪑'; break;
-                    case 'Computer': categoryEmoji = '💻'; break;
-                }
-                
-                productCard.innerHTML = `
-                    <div class="product-img">${categoryEmoji}</div>
+        </section>
+
+        <section class="category-filters">
+            <button class="filter-button">All</button>
+            <button class="filter-button">Consoles</button>
+            <button class="filter-button">Controllers</button>
+            <button class="filter-button">Headsets</button>
+            <button class="filter-button">Keyboards</button>
+            <button class="filter-button">Mouse</button>
+        </section>
+
+        <section class="product-grid">
+
+
+            <!-- Product Card 1 -->
+            <div class="product-card">
+                <img src="/api/placeholder/300/200" alt="Gaming Console" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">PlayStation 5</h3>
+                    <p class="product-description">Digital Edition Gaming Console</p>
                     <div class="product-details">
-                        <h3 class="product-name">${product.name}</h3>
-                        <span class="product-category">${product.category}</span>
-                        <div class="product-price">$${product.price.toFixed(2)}</div>
-                        <div class="stock-status ${product.inStock ? 'in-stock' : 'out-of-stock'}">
-                            ${product.inStock ? 'In Stock' : 'Out of Stock'}
-                        </div>
-                        ${product.inStock ? `<div class="quantity-info">Quantity available: ${product.quantity}</div>` : ''}
+                        <span class="stock-status">In Stock: 15</span>
+                        <span class="product-price">$499.99</span>
                     </div>
-                `;
-                
-                inventoryGrid.appendChild(productCard);
-            });
-        }
-        
-        function filterProducts() {
-            const categoryFilter = document.getElementById('categoryFilter').value;
-            const stockFilter = document.getElementById('stockFilter').value;
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            
-            // Get inventory data from localStorage
-            const inventory = JSON.parse(localStorage.getItem('inventoryData'));
-            
-            // Apply filters
-            const filteredProducts = inventory.filter(product => {
-                // Category filter
-                if (categoryFilter !== 'all' && product.category !== categoryFilter) {
-                    return false;
-                }
-                
-                // Stock filter
-                if (stockFilter === 'inStock' && !product.inStock) {
-                    return false;
-                }
-                if (stockFilter === 'outOfStock' && product.inStock) {
-                    return false;
-                }
-                
-                // Search filter
-                if (searchInput && !product.name.toLowerCase().includes(searchInput) && 
-                    !product.category.toLowerCase().includes(searchInput)) {
-                    return false;
-                }
-                
-                return true;
-            });
-            
-            // Display filtered products
-            displayProducts(filteredProducts);
-        }
-    </script>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="product-card">
+                <img src="/api/placeholder/300/200" alt="Gaming Headset" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Razer Kraken</h3>
+                    <p class="product-description">Gaming Headset - Black</p>
+                    <div class="product-details">
+                        <span class="stock-status">In Stock: 28</span>
+                        <span class="product-price">$79.99</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="product-card">
+                <img src="/api/placeholder/300/200" alt="Gaming Keyboard" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Logitech G Pro</h3>
+                    <p class="product-description">Mechanical Gaming Keyboard</p>
+                    <div class="product-details">
+                        <span class="stock-status low">Low Stock: 3</span>
+                        <span class="product-price">$129.99</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div class="product-card">
+                <img src="/api/placeholder/300/200" alt="Gaming Mouse" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Logitech G502</h3>
+                    <p class="product-description">HERO Gaming Mouse</p>
+                    <div class="product-details">
+                        <span class="stock-status out">Out of Stock</span>
+                        <span class="product-price">$49.99</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 </body>
 </html>

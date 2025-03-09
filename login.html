@@ -3,281 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tronic Gaming Inventory - Login</title>
-    <style>
-        :root {
-            --primary-blue: #1e90ff;
-            --primary-blue-glow: rgba(30, 144, 255, 0.6);
-            --secondary-orange: #ff7700;
-            --secondary-orange-glow: rgba(255, 119, 0, 0.6);
-            --dark-bg: #0a0a0a;
-            --card-bg: #121212;
-            --light-text: #f0f0f0;
-            --input-bg: rgba(30, 30, 40, 0.6);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #000000; /* Updated to black */
-
-            color: var(--light-text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: 
-                radial-gradient(circle at 20% 30%, var(--primary-blue-glow) 0%, transparent 20%),
-                radial-gradient(circle at 80% 70%, var(--secondary-orange-glow) 0%, transparent 20%),
-                linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
-                url('/api/placeholder/1200/800');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(135deg, transparent 0%, rgba(30, 144, 255, 0.1) 50%, transparent 100%);
-            animation: scanline 10s linear infinite;
-            pointer-events: none;
-        }
-        
-        @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
-        
-        
-        .login-container {
-            background-color: var(--card-bg);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 
-                0 0 20px rgba(0, 0, 0, 0.5),
-                0 0 30px var(--primary-blue-glow),
-                0 0 50px var(--secondary-orange-glow);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            border: 1px solid rgba(30, 144, 255, 0.3);
-            backdrop-filter: blur(5px);
-            position: relative;
-            z-index: 1;
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--primary-blue), var(--secondary-orange), var(--primary-blue));
-            z-index: -1;
-            opacity: 0.4;
-            animation: border-glow 3s linear infinite;
-        }
-        
-        @keyframes border-glow {
-            0% { opacity: 0.4; }
-            50% { opacity: 0.8; }
-            100% { opacity: 0.4; }
-        }
-        
-        .login-container h2 {
-            color: var(--light-text);
-            margin-bottom: 30px;
-            font-size: 2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .login-container h2::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -10px;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-orange));
-            transform: translateX(-50%);
-            border-radius: 3px;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-            text-align: left;
-            position: relative;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: var(--light-text);
-            opacity: 0.8;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            background-color: var(--input-bg);
-            color: var(--light-text);
-            font-size: 1rem;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px var(--primary-blue);
-            border-color: var(--primary-blue);
-        }
-        
-        button[type="submit"] {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #1e90ff, #ff7700); /* Updated to blue and orange */
-
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        button[type="submit"]::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: all 0.6s;
-        }
-        
-        button[type="submit"]:hover {
-            transform: translateY(-3px);
-            box-shadow: 
-                0 10px 20px rgba(0, 0, 0, 0.3),
-                0 0 15px var(--primary-blue-glow);
-        }
-        
-        button[type="submit"]:hover::before {
-            left: 100%;
-        }
-        
-        .error {
-            color: red;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-    </style>
+    <title>Login and Register - Tronic Gaming Management System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Tronic Shop Login</h1>
-        
-        <!-- Error messages -->
-        <div id="error-message" class="error">
-            
-            <?php
-            if (isset($_GET['error'])) {
-                if ($_GET['error'] == "emptyfields") {
-                    echo "Fill in all fields!";
-                } else if ($_GET['error'] == "wrongpassword") {
-                    echo "Wrong password!";
-                } else if ($_GET['error'] == "nouser") {
-                    echo "User does not exist!";
-                } else if ($_GET['error'] == "sqlerror") {
-                    echo "Database error. Please try again later.";
-                }
-            }
-            ?>
-        </div>
-        
-        <form action="login.inc.php" method="post">
-            <div class="form-group">
-                <label for="user-type">Login as:</label>
-                <select name="user-type" id="user-type">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" name="login-submit">Login</button>
+    <div class="container">
+        <h1>Tronic Inventory Management</h1>
+
+        <h2>Login</h2>
+        <form id="loginForm" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <h2>Register</h2>
+        <form id="registrationForm" method="POST">
+            <label for="regUsername">Username:</label>
+            <input type="text" id="regUsername" name="username" placeholder="Choose a username" required>
+            <label for="regEmail">Email:</label>
+            <input type="email" id="regEmail" name="email" placeholder="Enter your email" required>
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword" name="password" placeholder="Choose a password" required>
+            <label for="regRole">Role:</label>
+            <select id="regRole" name="role" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Register</button>
         </form>
     </div>
-    
-    <script>
-        // JavaScript to handle the URL parameters for error messages
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const errorType = urlParams.get('error');
-            
-            if (errorType) {
-                const errorElement = document.getElementById('error-message');
-                
-                switch(errorType) {
-                    case 'emptyfields':
-                        errorElement.textContent = 'Please fill in all fields!';
-                        break;
-                    case 'wrongpassword':
-                        errorElement.textContent = 'Incorrect password!';
-                        break;
-                    case 'nouser':
-                        errorElement.textContent = 'User does not exist!';
-                        break;
-                    case 'sqlerror':
-                        errorElement.textContent = 'Database error. Please try again later.';
-                        break;
-                    default:
-                        errorElement.textContent = '';
-                }
-            }
-        };
-    </script>
+
+    <script src="script.js"></script>
 </body>
 </html>
