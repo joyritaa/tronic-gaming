@@ -89,8 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get inventory data from localStorage
     const inventory = JSON.parse(localStorage.getItem('inventoryData'));
     
-    // Display all products initially
+    // Display all products initially with action buttons
     displayProducts(inventory);
+    addActionButtons();
+
     
     // Set up event listeners for filters
     document.getElementById('categoryFilter').addEventListener('change', filterProducts);
@@ -104,7 +106,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function addActionButtons() {
+    const inventoryGrid = document.getElementById('inventoryGrid');
+    const productCards = inventoryGrid.getElementsByClassName('product-card');
+
+    Array.from(productCards).forEach(card => {
+        const productId = card.dataset.id; // Assuming each card has a data-id attribute
+        const addButton = document.createElement('button');
+        addButton.textContent = '+';
+        addButton.className = 'action-btn add-btn';
+        addButton.onclick = function() {
+            // AJAX call to add product logic here
+            console.log(`Add product with ID: ${productId}`);
+        };
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '-';
+        deleteButton.className = 'action-btn delete-btn';
+        deleteButton.onclick = function() {
+            // AJAX call to delete product logic here
+            console.log(`Delete product with ID: ${productId}`);
+        };
+
+        card.appendChild(addButton);
+        card.appendChild(deleteButton);
+    });
+}
+
 function displayProducts(products) {
+
     const inventoryGrid = document.getElementById('inventoryGrid');
     inventoryGrid.innerHTML = '';
     
@@ -114,6 +144,10 @@ function displayProducts(products) {
     }
     
     products.forEach(product => {
+        productCard.className = 'product-card';
+        productCard.dataset.id = product.id; // Set data-id for action buttons
+
+
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         
@@ -123,8 +157,6 @@ function displayProducts(products) {
             case 'Console': categoryEmoji = '🎮'; break;
             case 'Game': categoryEmoji = '💿'; break;
             case 'Accessory': categoryEmoji = '🎧'; break;
-            case 'Furniture': categoryEmoji = '🪑'; break;
-            case 'Computer': categoryEmoji = '💻'; break;
         }
         
         productCard.innerHTML = `
