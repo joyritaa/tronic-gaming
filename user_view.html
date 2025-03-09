@@ -3,99 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Gadgets Inventory</title>
-    <link href="style.css" rel="stylesheet">
+    <title>Tronic Inventory - User View</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-content">
-            <h1>Tronic Gaming Inventory</h1>
-            <div class="nav-links">
-                <a href="user_view.html">Users dashboard</a>
-                <a href="admin_panel.html">Admin Panel</a>
-                <a href="login.html">Login</a>
+    <header>
+        <div class="logo">GameStore</div>
+        <div class="user-controls">
+            <div class="user-info" id="userInfo">Welcome, User</div>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </header>
+    
+    <main>
+        <h1>Game Inventory</h1>
+        
+        <div class="filter-controls">
+            <div class="filter-item">
+                <label for="categoryFilter">Category:</label>
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="Console">Consoles</option>
+                    <option value="Game">Gaming</option>
+                    <option value="Accessory">Accessories</option>
+                </select>
+            </div>
+            
+            <div class="filter-item">
+                <label for="stockFilter">Availability:</label>
+                <select id="stockFilter">
+                    <option value="all">All Items</option>
+                    <option value="inStock">In Stock Only</option>
+                    <option value="outOfStock">Out of Stock Only</option>
+                </select>
+            </div>
+            
+            <div class="filter-item">
+                <label for="searchInput">Search:</label>
+                <input type="text" id="searchInput" placeholder="Search products...">
             </div>
         </div>
-    </nav>
-
-    <main class="main-container">
-        <section class="search-section">
-            <div class="search-content">
-                <input type="text" placeholder="Search products...">
-                <select>
-                    <option value="">All Categories</option>
-                    <option value="consoles">Gaming Consoles</option>
-                    <option value="accessories">Accessories</option>
-                    <option value="peripherals">Peripherals</option>
-                </select>
-                <button class="search-button">Search</button>
-            </div>
-        </section>
-
-        <section class="category-filters">
-            <button class="filter-button">All</button>
-            <button class="filter-button">Consoles</button>
-            <button class="filter-button">Controllers</button>
-            <button class="filter-button">Headsets</button>
-            <button class="filter-button">Keyboards</button>
-            <button class="filter-button">Mouse</button>
-        </section>
-
-        <section class="product-grid">
-
-
-            <!-- Product Card 1 -->
-            <div class="product-card">
-                <img src="/api/placeholder/300/200" alt="Gaming Console" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">PlayStation 5</h3>
-                    <p class="product-description">Digital Edition Gaming Console</p>
-                    <div class="product-details">
-                        <span class="stock-status">In Stock: 15</span>
-                        <span class="product-price">$499.99</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="product-card">
-                <img src="/api/placeholder/300/200" alt="Gaming Headset" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">Razer Kraken</h3>
-                    <p class="product-description">Gaming Headset - Black</p>
-                    <div class="product-details">
-                        <span class="stock-status">In Stock: 28</span>
-                        <span class="product-price">$79.99</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card">
-                <img src="/api/placeholder/300/200" alt="Gaming Keyboard" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">Logitech G Pro</h3>
-                    <p class="product-description">Mechanical Gaming Keyboard</p>
-                    <div class="product-details">
-                        <span class="stock-status low">Low Stock: 3</span>
-                        <span class="product-price">$129.99</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card">
-                <img src="/api/placeholder/300/200" alt="Gaming Mouse" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">Logitech G502</h3>
-                    <p class="product-description">HERO Gaming Mouse</p>
-                    <div class="product-details">
-                        <span class="stock-status out">Out of Stock</span>
-                        <span class="product-price">$49.99</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+        
+        <div class="inventory-grid" id="inventoryGrid">
+            <!-- Products will be dynamically added here -->
+        </div>
     </main>
+    
+    <script src="script.js"></script>
 </body>
 </html>
