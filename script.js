@@ -73,12 +73,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     });
 });
 
-
-
-
-
-
-//User view
+// User view
 document.addEventListener('DOMContentLoaded', function() {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     
@@ -185,14 +180,8 @@ function filterProducts() {
     displayProducts(filteredProducts);
 }
 
-
-
-
-
-
-//Admin panel
-  // Check if user is logged in and is an admin
-  document.addEventListener('DOMContentLoaded', function() {
+// Admin panel
+document.addEventListener('DOMContentLoaded', function() {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     
     // If no user is logged in or the user is not an admin, redirect to login page
@@ -214,11 +203,25 @@ function filterProducts() {
     
     // Set up event listeners
     document.getElementById('userManagementBtn').addEventListener('click', function() {
-        window.location.href = 'user_management.html';
+        // AJAX call to fetch user management page
+        fetch('includes/user/add_user.php')
+            .then(response => response.text())
+            .then(data => {
+                // Handle the response data (e.g., display in a modal or redirect)
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
     });
     
     document.getElementById('productManagementBtn').addEventListener('click', function() {
-        window.location.href = 'product_management.html';
+        // AJAX call to fetch product management page
+        fetch('includes/products/add_products.php')
+            .then(response => response.text())
+            .then(data => {
+                // Handle the response data (e.g., display in a modal or redirect)
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
     });
     
     // Logout button handler
@@ -246,350 +249,265 @@ function updateStats(inventory, users, admins) {
     document.getElementById('totalUsersStat').textContent = totalUsers;
 }
 
+// User management
+document.addEventListener('DOMContentLoaded', function() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    
+    // If no user is logged in or the user is not an admin, redirect to login page
+    if (!currentUser || currentUser.role !== 'admin') {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Load user data
+    const users = JSON.parse(localStorage.getItem('usersData'));
+    const admins = JSON.parse(localStorage.getItem('adminsData'));
+    
+    // Display all users
+    displayUsers(users, admins);
+    
+    // Set up event listeners
+    document.getElementById('userForm').addEventListener('submit', handleUserFormSubmit);
+    document.getElementById('searchUsers').addEventListener('input', handleUserSearch);
+    document.getElementById('backBtn').addEventListener('click', function() {
+        window.location.href = 'admin_panel.html';
+    });
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        sessionStorage.removeItem('currentUser');
+        window.location.href = 'login.html';
+    });
+});
 
-
-
-
-
-//User management
-    // Check if user is logged in and is an admin
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+function displayUsers(users, admins) {
+    const tableBody = document.getElementById('usersTableBody');
+    tableBody.innerHTML = '';
+    
+    // Display admins
+    admins.forEach((admin, index) => {
+        const row = document.createElement('tr');
         
-        // If no user is logged in or the user is not an admin, redirect to login page
-        if (!currentUser || currentUser.role !== 'admin') {
-            window.location.href = 'login.html';
-            return;
-        }
+        row.innerHTML = `
+            <td>${admin.username}</td>
+            <td><span class="admin-badge">Admin</span></td>
+            <td>
+                <button class="action-btn edit-btn" data-type="admin" data-index="${index}">Edit</button>
+                <button class="action-btn delete-btn" data-type="admin" data-index="${index}">Delete</button>
+            </td>
+        `;
         
-        // Load user data
-        const users = JSON.parse(localStorage.getItem('usersData'));
-        const admins = JSON.parse(localStorage.getItem('adminsData'));
-        
-        // Display all users
-        displayUsers(users, admins);
-        
-        // Set up event listeners
-        document.getElementById('userForm').addEventListener('submit', handleUserFormSubmit);
-        document.getElementById('searchUsers').addEventListener('input', handleUserSearch);
-        document.getElementById('backBtn').addEventListener('click', function() {
-            window.location.href = 'admin_panel.html';
-        });
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            sessionStorage.removeItem('currentUser');
-            window.location.href = 'login.html';
-        });
+        tableBody.appendChild(row);
     });
     
-    function displayUsers(users, admins) {
-        const tableBody = document.getElementById('usersTableBody');
-        tableBody.innerHTML = '';
+    // Display regular users
+    users.forEach((user, index) => {
+        const row = document.createElement('tr');
         
-        // Display admins
-        admins.forEach((admin, index) => {
-            const row = document.createElement('tr');
-            
-            row.innerHTML = `
-                <td>${admin.username}</td>
-                <td><span class="admin-badge">Admin</span></td>
-                <td>
-                    <button class="action-btn edit-btn" data-type="admin" data-index="${index}">Edit</button>
-                    <button class="action-btn delete-btn" data-type="admin" data-index="${index}">Delete</button>
-                </td>
-            `;
-            
-            tableBody.appendChild(row);
-        });
+        row.innerHTML = `
+            <td>${user.username}</td>
+            <td><span class="user-badge">User</span></td>
+            <td>
+                <button class="action-btn edit-btn" data-type="user" data-index="${index}">Edit</button>
+                <button class="action-btn delete-btn" data-type="user" data-index="${index}">Delete</button>
+            </td>
+        `;
         
-        // Display regular users
-        users.forEach((user, index) => {
-            const row = document.createElement('tr');
-            
-            row.innerHTML = `
-                <td>${user.username}</td>
-                <td><span class="user-badge">User</span></td>
-                <td>
-                    <button class="action-btn edit-btn" data-type="user" data-index="${index}">Edit</button>
-                    <button class="action-btn delete-btn" data-type="user" data-index="${index}">Delete</button>
-                </td>
-            `;
-            
-            tableBody.appendChild(row);
-        });
-        
-        // Add event listeners to edit and delete buttons
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', handleEditUser);
-        });
-        
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', handleDeleteUser);
-        });
-    }
+        tableBody.appendChild(row);
+    });
     
-    function handleUserFormSubmit(e) {
-        e.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const role = document.getElementById('userRole').value;
-        const editUserId = document.getElementById('editUserId').value;
-        
-        // Load current data
-        const users = JSON.parse(localStorage.getItem('usersData'));
-        const admins = JSON.parse(localStorage.getItem('adminsData'));
-        
-        // Check if we're editing or adding
-        if (editUserId) {
-            // We're editing an existing user
-            const parts = editUserId.split('-');
-            const type = parts[0];
-            const index = parseInt(parts[1]);
-            
-            if (type === 'user') {
-                // Make sure username doesn't already exist in another user
-                const usernameExists = (users.some((u, i) => u.username === username && i !== index) || 
-                                      admins.some(a => a.username === username));
-                
-                if (usernameExists) {
-                    showErrorMessage('Username already exists');
-                    return;
-                }
-                
-                // Update user
-                users[index] = {
-                    username: username,
-                    password: password,
-                    role: role
-                };
-                
-                // If role was changed to admin, move to admins array
-                if (role === 'admin') {
-                    admins.push(users[index]);
-                    users.splice(index, 1);
-                }
-                
-            } else if (type === 'admin') {
-                // Make sure username doesn't already exist in another user
-                const usernameExists = (admins.some((a, i) => a.username === username && i !== index) || 
-                                      users.some(u => u.username === username));
-                
-                if (usernameExists) {
-                    showErrorMessage('Username already exists');
-                    return;
-                }
-                
-                // Update admin
-                admins[index] = {
-                    username: username,
-                    password: password,
-                    role: role
-                };
-                
-                // If role was changed to user, move to users array
-                if (role === 'user') {
-                    users.push(admins[index]);
-                    admins.splice(index, 1);
-                }
-            }
-            
-            showSuccessMessage('User updated successfully');
+    // Add event listeners to edit and delete buttons
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', handleEditUser);
+    });
+    
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', handleDeleteUser);
+    });
+}
+
+function handleUserFormSubmit(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('userRole').value;
+    const editUserId = document.getElementById('editUserId').value;
+    
+    // Prepare data for AJAX request
+    const userData = {
+        username: username,
+        password: password,
+        role: role,
+        editUserId: editUserId
+    };
+    
+    // AJAX call to add or edit user
+    const url = editUserId ? 'includes/user/edit_user.php' : 'includes/user/add_user.php';
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccessMessage(data.message);
+            // Update user display
+            displayUsers(data.users, data.admins);
         } else {
-            // We're adding a new user
-            // Check if username already exists
-            const usernameExists = users.some(u => u.username === username) || 
-                                 admins.some(a => a.username === username);
-            
-            if (usernameExists) {
-                showErrorMessage('Username already exists');
-                return;
-            }
-            
-            // Create new user object
-            const newUser = {
-                username: username,
-                password: password,
-                role: role
-            };
-            
-            // Add to appropriate array
-            if (role === 'admin') {
-                admins.push(newUser);
-            } else {
-                users.push(newUser);
-            }
-            
-            showSuccessMessage('User added successfully');
+            showErrorMessage(data.message);
         }
-        
-        // Save updated data
-        localStorage.setItem('usersData', JSON.stringify(users));
-        localStorage.setItem('adminsData', JSON.stringify(admins));
-        
-        // Reset form
-        document.getElementById('userForm').reset();
-        document.getElementById('editUserId').value = '';
-        document.getElementById('formTitle').textContent = 'Add New User';
-        document.getElementById('submitBtn').textContent = 'Add User';
-        
-        // Update display
-        displayUsers(users, admins);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function handleEditUser(e) {
+    const type = e.target.dataset.type;
+    const index = e.target.dataset.index;
+    
+    // Load user data
+    const users = JSON.parse(localStorage.getItem('usersData'));
+    const admins = JSON.parse(localStorage.getItem('adminsData'));
+    
+    // Get user to edit
+    const userData = type === 'user' ? users[index] : admins[index];
+    
+    // Fill form with user data
+    document.getElementById('username').value = userData.username;
+    document.getElementById('password').value = userData.password;
+    document.getElementById('userRole').value = userData.role;
+    document.getElementById('editUserId').value = `${type}-${index}`;
+    
+    // Update form title and button
+    document.getElementById('formTitle').textContent = 'Edit User';
+    document.getElementById('submitBtn').textContent = 'Update User';
+    
+    // Scroll to form
+    document.querySelector('.user-form-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function handleDeleteUser(e) {
+    if (!confirm('Are you sure you want to delete this user?')) {
+        return;
     }
     
-    function handleEditUser(e) {
-        const type = e.target.dataset.type;
-        const index = e.target.dataset.index;
-        
-        // Load user data
-        const users = JSON.parse(localStorage.getItem('usersData'));
-        const admins = JSON.parse(localStorage.getItem('adminsData'));
-        
-        // Get user to edit
-        const userData = type === 'user' ? users[index] : admins[index];
-        
-        // Fill form with user data
-        document.getElementById('username').value = userData.username;
-        document.getElementById('password').value = userData.password;
-        document.getElementById('userRole').value = userData.role;
-        document.getElementById('editUserId').value = `${type}-${index}`;
-        
-        // Update form title and button
-        document.getElementById('formTitle').textContent = 'Edit User';
-        document.getElementById('submitBtn').textContent = 'Update User';
-        
-        // Scroll to form
-        document.querySelector('.user-form-section').scrollIntoView({ behavior: 'smooth' });
+    const type = e.target.dataset.type;
+    const index = e.target.dataset.index;
+    
+    // Load user data
+    const users = JSON.parse(localStorage.getItem('usersData'));
+    const admins = JSON.parse(localStorage.getItem('adminsData'));
+    
+    // Current logged in user
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    
+    // Check if user is trying to delete themselves
+    const targetUsername = type === 'user' ? users[index].username : admins[index].username;
+    if (targetUsername === currentUser.username) {
+        showErrorMessage('You cannot delete your own account while logged in');
+        return;
     }
     
-    function handleDeleteUser(e) {
-        if (!confirm('Are you sure you want to delete this user?')) {
-            return;
-        }
-        
-        const type = e.target.dataset.type;
-        const index = e.target.dataset.index;
-        
-        // Load user data
-        const users = JSON.parse(localStorage.getItem('usersData'));
-        const admins = JSON.parse(localStorage.getItem('adminsData'));
-        
-        // Current logged in user
-        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-        
-        // Check if user is trying to delete themselves
-        const targetUsername = type === 'user' ? users[index].username : admins[index].username;
-        if (targetUsername === currentUser.username) {
-            showErrorMessage('You cannot delete your own account while logged in');
-            return;
-        }
-        
-        // Remove user
-        if (type === 'user') {
-            users.splice(index, 1);
-        } else {
-            admins.splice(index, 1);
-        }
-        
-        // Save updated data
-        localStorage.setItem('usersData', JSON.stringify(users));
-        localStorage.setItem('adminsData', JSON.stringify(admins));
-        
-        // Update display
-        displayUsers(users, admins);
-        
-        showSuccessMessage('User deleted successfully');
+    // Remove user
+    if (type === 'user') {
+        users.splice(index, 1);
+    } else {
+        admins.splice(index, 1);
     }
     
-    function handleUserSearch(e) {
-        const searchQuery = e.target.value.toLowerCase();
-        
-        // Load user data
-        const users = JSON.parse(localStorage.getItem('usersData'));
-        const admins = JSON.parse(localStorage.getItem('adminsData'));
-        
-        // Filter users
-        const filteredUsers = users.filter(user => 
-            user.username.toLowerCase().includes(searchQuery)
-        );
-        
-        // Filter admins
-        const filteredAdmins = admins.filter(admin => 
-            admin.username.toLowerCase().includes(searchQuery)
-        );
-        
-        // Update display
-        displayUsers(filteredUsers, filteredAdmins);
-    }
+    // Save updated data
+    localStorage.setItem('usersData', JSON.stringify(users));
+    localStorage.setItem('adminsData', JSON.stringify(admins));
     
-    function showSuccessMessage(message) {
-        const successMsg = document.getElementById('successMessage');
-        const errorMsg = document.getElementById('errorMessage');
-        
-        successMsg.textContent = message;
-        successMsg.style.display = 'block';
-        errorMsg.style.display = 'none';
-        
-        setTimeout(() => {
-            successMsg.style.display = 'none';
-        }, 3000);
-    }
+    // Update display
+    displayUsers(users, admins);
     
-    function showErrorMessage(message) {
-        const successMsg = document.getElementById('successMessage');
-        const errorMsg = document.getElementById('errorMessage');
-        
-        errorMsg.textContent = message;
-        errorMsg.style.display = 'block';
+    showSuccessMessage('User deleted successfully');
+}
+
+function handleUserSearch(e) {
+    const searchQuery = e.target.value.toLowerCase();
+    
+    // Load user data
+    const users = JSON.parse(localStorage.getItem('usersData'));
+    const admins = JSON.parse(localStorage.getItem('adminsData'));
+    
+    // Filter users
+    const filteredUsers = users.filter(user => 
+        user.username.toLowerCase().includes(searchQuery)
+    );
+    
+    // Filter admins
+    const filteredAdmins = admins.filter(admin => 
+        admin.username.toLowerCase().includes(searchQuery)
+    );
+    
+    // Update display
+    displayUsers(filteredUsers, filteredAdmins);
+}
+
+function showSuccessMessage(message) {
+    const successMsg = document.getElementById('successMessage');
+    const errorMsg = document.getElementById('errorMessage');
+    
+    successMsg.textContent = message;
+    successMsg.style.display = 'block';
+    errorMsg.style.display = 'none';
+    
+    setTimeout(() => {
         successMsg.style.display = 'none';
-        
-        setTimeout(() => {
-            errorMsg.style.display = 'none';
-        }, 3000);
-    }
+    }, 3000);
+}
 
+function showErrorMessage(message) {
+    const successMsg = document.getElementById('successMessage');
+    const errorMsg = document.getElementById('errorMessage');
+    
+    errorMsg.textContent = message;
+    errorMsg.style.display = 'block';
+    successMsg.style.display = 'none';
+    
+    setTimeout(() => {
+        errorMsg.style.display = 'none';
+    }, 3000);
+}
 
-
-
-
-
-//Product management
-
+// Product management
 function displayProducts(products) {
-
-   // Modal functionality
-   const modal = document.getElementById('productModal');
-   const modalTitle = document.getElementById('modalTitle');
-   const stockToggle = document.getElementById('stockToggle');
-   const stockStatusLabel = document.getElementById('stockStatusLabel');
-   
-   function openModal(isEdit = false) {
-       modal.style.display = 'flex';
-       if (isEdit) {
-           modalTitle.textContent = 'Edit Product';
-           // Here you would normally populate the form with the product data
-       } else {
-           modalTitle.textContent = 'Add New Product';
-           // Reset form
-       }
-   }
-   
-   function closeModal() {
-       modal.style.display = 'none';
-   }
-   
-   // Close modal when clicking outside of it
-   window.onclick = function(event) {
-       if (event.target === modal) {
-           closeModal();
-       }
-   }
-   
-   // Toggle stock status
-   stockToggle.addEventListener('change', function() {
-       if (this.checked) {
-           stockStatusLabel.textContent = 'In Stock';
-       } else {
-           stockStatusLabel.textContent = 'Out of Stock';
-       }
-   });
+    const inventoryGrid = document.getElementById('inventoryGrid');
+    inventoryGrid.innerHTML = '';
+    
+    if (products.length === 0) {
+        inventoryGrid.innerHTML = '<div class="no-results">No products match your search criteria.</div>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        
+        // Get emoji based on category
+        let categoryEmoji = '🎮';
+        switch (product.category) {
+            case 'Console': categoryEmoji = '🎮'; break;
+            case 'Game': categoryEmoji = '💿'; break;
+            case 'Accessory': categoryEmoji = '🎧'; break;
+        }
+        
+        productCard.innerHTML = `
+            <div class="product-img">${categoryEmoji}</div>
+            <div class="product-details">
+                <h3 class="product-name">${product.name}</h3>
+                <span class="product-category">${product.category}</span>
+                <div class="product-price">$${product.price.toFixed(2)}</div>
+                <div class="stock-status ${product.inStock ? 'in-stock' : 'out-of-stock'}">
+                    ${product.inStock ? 'In Stock' : 'Out of Stock'}
+                </div>
+                ${product.inStock ? `<div class="quantity-info">Quantity available: ${product.quantity}</div>` : ''}
+            </div>
+        `;
+        
+        inventoryGrid.appendChild(productCard);
+    });
 }
