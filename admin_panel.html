@@ -3,162 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming Gadgets Inventory</title>
-    <link href="assets/styles.css" rel="stylesheet">
+    <title>GameStore Inventory - Admin Panel</title>
+    <style>
+        :root {
+            --primary-blue: #0077cc;
+            --secondary-orange: #ff6600;
+            --dark-bg: #121212;
+            --light-text: #f0f0f0;
+            --card-bg: rgba(30, 30, 40, 0.8);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                              url('/api/placeholder/1200/800');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--secondary-orange);
+        }
+        
+        .logo {
+            color: var(--secondary-orange);
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .user-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            margin-right: 20px;
+            color: var(--light-text);
+        }
+        
+        .logout-btn {
+            background-color: var(--secondary-orange);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #ff8533;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+        }
+        
+        main {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--secondary-orange);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .admin-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .admin-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--primary-blue);
+            text-align: center;
+            padding: 30px 20px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 119, 204, 0.3);
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--secondary-orange);
+        }
+        
+        .admin-card h2 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .admin-card p {
+            color: #aaa;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .card-button {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .card-button:hover {
+            background-color: #0099ff;
+            box-shadow: 0 0 15px rgba(0, 119, 204, 0.5);
+        }
+        
+        .stats-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            border: 1px solid var(--primary-blue);
+        }
+        
+        .stat-card {
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary-orange);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-content">
-            <h1>Tronic Gaming Inventory</h1>
-            <div class="nav-links">
-                <a href="user_view.html">Users dashboard</a>
-                <a href="admin_panel.html">Admin Panel</a>
-                <a href="login.html">Login</a>
+    <header>
+        <div class="logo">GameStore</div>
+        <div class="user-controls">
+            <div class="user-info" id="userInfo">Welcome, Admin</div>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </header>
+    
+    <main>
+        <h1>Admin Dashboard</h1>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProductsStat">0</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="inStockStat">0</div>
+                <div class="stat-label">In Stock</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="outOfStockStat">0</div>
+                <div class="stat-label">Out of Stock</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsersStat">0</div>
+                <div class="stat-label">Total Users</div>
             </div>
         </div>
-    </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="header">
-                <h1>Admin Dashboard</h1>
-                <div class="action-buttons">
-                    <a href="#product" class="btn btn-primary">Products</a>
-                    <a href="#users" class="btn btn-primary">Manage Users</a>
-                </div>
+        
+        <div class="admin-cards">
+            <div class="admin-card">
+                <div class="card-icon">👥</div>
+                <h2>User Management</h2>
+                <p>Add new users, edit existing users, or remove users from the system.</p>
+                <button class="card-button" id="userManagementBtn">Manage Users</button>
             </div>
-
-            <!-- Dashboard Cards -->
-            <div class="dashboard-cards">
-                <div class="card">
-                    <h3 class="card-title">Total Products</h3>
-                    <div class="card-value">147</div>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Low Stock Items</h3>
-                    <div class="card-value" style="color: var(--warning);">12</div>
-                </div>
-                <div class="card">
-                    <h3 class="card-title">Active Users</h3>
-                    <div class="card-value">523</div>
-                </div>
+            
+            <div class="admin-card">
+                <div class="card-icon">🎮</div>
+                <h2>Product Management</h2>
+                <p>Add, edit, or remove products from the inventory system.</p>
+                <button class="card-button" id="productManagementBtn">Manage Products</button>
             </div>
-
-            <!-- Low Stock Products Table -->
-            <div class="table-container">
-                <h2>Low Stock Products</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Category</th>
-                            <th>Stock Level</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Logitech G Pro</td>
-                            <td>Keyboards</td>
-                            <td>3</td>
-                            <td><span class="status status-low">Low Stock</span></td>
-                            <td>
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Remove</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Razer DeathAdder</td>
-                            <td>Mouse</td>
-                            <td>0</td>
-                            <td><span class="status status-out">Out of Stock</span></td>
-                            <td>
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Remove</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- User Management Table -->
-            <div class="table-container">
-                <h2>Recent Users</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Alex Mwakidau</td>
-                            <td>alex@outlook.com</td>
-                            <td>User</td>
-                            <td>Active</td>
-                            <td class="user-actions">
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Disable</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Musa Luku</td>
-                            <td>Musa@gmail.com</td>
-                            <td>Admin</td>
-                            <td>Active</td>
-                            <td class="user-actions">
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Disable</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    </div>
-
-    <section class="management hero">
-            <h1>For admins</h1>
-            <p>Manage users and products</p>
-    </section>
-
-    <!-- Venue Navigation -->
-    <nav class="management_nav">
-        <ul>
-            <li><a href="#product">Product</a></li>
-            <li><a href="#users">Manage users</a></li>
-        </ul>
-    </nav>
-
-    <!-- Individual Venue Sections -->
-    <main class="management-container">
+        </div>
+    </main>
     
-        <section id="product" class="management-section">
-            <h2>Play Station 5</h2>
-            <div class="management-grid">
-                <div class="management-images">
-                    <div class="main-image">
-                        <img src="assets/img/venue-gallery-4.jpg" alt="Product Image">
-                    </div>
-                </div>
-                <div class="management-info">
-                    <h3>Product features</h3>
-                    <ul>
-                        <li><i class="fas fa-users"></i>5 players can use it at a time</li>
-                    </ul>
-                    <div class="management-description">
-                        <p>Used for gaming</p>
-                    </div>
-                    <button class="btn-book">Remove this product</button>
-                    <button class="btn-book">Add thid product</button>
-                </div>
-            </div>
-        </section>
-        <script src="script.js"></script>
+    <script>
+        // Check if user is logged in and is an admin
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            
+            // If no user is logged in or the user is not an admin, redirect to login page
+            if (!currentUser || currentUser.role !== 'admin') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update user info in header
+            document.getElementById('userInfo').textContent = `Welcome, ${currentUser.username}`;
+            
+            // Load inventory and user data
+            const inventory = JSON.parse(localStorage.getItem('inventoryData'));
+            const users = JSON.parse(localStorage.getItem('usersData'));
+            const admins = JSON.parse(localStorage.getItem('adminsData'));
+            
+            // Update stats
+            updateStats(inventory, users, admins);
+            
+            // Set up event listeners
+            document.getElementById('userManagementBtn').addEventListener('click', function() {
+                window.location.href = 'user_management.html';
+            });
+            
+            document.getElementById('productManagementBtn').addEventListener('click', function() {
+                window.location.href = 'product_management.html';
+            });
+            
+            // Logout button handler
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                sessionStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            });
+        });
+        
+        function updateStats(inventory, users, admins) {
+            // Count total products
+            const totalProducts = inventory.length;
+            document.getElementById('totalProductsStat').textContent = totalProducts;
+            
+            // Count in stock products
+            const inStockProducts = inventory.filter(product => product.inStock).length;
+            document.getElementById('inStockStat').textContent = inStockProducts;
+            
+            // Count out of stock products
+            const outOfStockProducts = inventory.filter(product => !product.inStock).length;
+            document.getElementById('outOfStockStat').textContent = outOfStockProducts;
+            
+            // Count total users (including admins)
+            const totalUsers = users.length + admins.length;
+            document.getElementById('totalUsersStat').textContent = totalUsers;
+        }
+    </script>
 </body>
 </html>
