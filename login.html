@@ -287,40 +287,42 @@
     </div>
 
     <script>
-    function loginUser(isAdmin) {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    // Determine which endpoint to use
-    const action = isAdmin ? 'admin_login' : 'user_login';
-    
-    // Create form data
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-    
-    // Send request
-    fetch(`auth.php?action=${action}`, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Save user data (including role) to session/localStorage
-            localStorage.setItem('user', JSON.stringify(data.user));
-            // Redirect to appropriate dashboard
-            window.location.href = isAdmin ? 'admin-dashboard.php' : 'user-dashboard.php';
-        } else {
-            // Display error message
-            alert(data.message || 'Login failed');
-        }
-    })
-    .catch(error => {
-        console.error('Login error:', error);
-        alert('An error occurred during login');
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        loginUser(true);
     });
-}
+       
+        function loginUser(isAdmin){
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+    //determine what endpoint to use
+    const action=  isAdmin ? 'admin_login' : 'user_login';
+        
+        // Create form data
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+        
+        // Send login request specifically for admin login
+        fetch('auth.php?action=admin_login', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                // Store admin user in session storage
+                localStorage.setItem('user', JSON.stringify(data.user));
+            // Redirect to appropriate dashboard
+            window.location.href = isAdmin ? 'admin_panel.html' : 'user_view.html';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    };
     </script>
 </body>
 </html>
