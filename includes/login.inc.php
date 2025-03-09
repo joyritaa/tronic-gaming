@@ -48,8 +48,8 @@ if (isset($_POST['login-submit'])) {
 
                 mysqli_stmt_close($stmt);
                 mysqli_close($conn);
-            header("Location: user_view.html");
-
+                // Redirect admin to admin_panel.html
+                header("Location: admin_panel.html");
                 exit();
             } else {
                 $_SESSION['user_id'] = $row['user_id'];
@@ -63,6 +63,7 @@ if (isset($_POST['login-submit'])) {
 
                 mysqli_stmt_close($stmt);
                 mysqli_close($conn);
+                // Redirect regular user to user_view.html
                 header("Location: user_view.html");
                 exit();
             }
