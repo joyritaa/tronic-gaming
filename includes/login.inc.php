@@ -48,7 +48,8 @@ if (isset($_POST['login-submit'])) {
 
                 mysqli_stmt_close($stmt);
                 mysqli_close($conn);
-                header("Location: admin_panel.html");
+            header("Location: user_view.html");
+
                 exit();
             } else {
                 $_SESSION['user_id'] = $row['user_id'];

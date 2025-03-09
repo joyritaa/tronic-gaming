@@ -9,8 +9,15 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #000000;
+            background-color: #000000; /* Remains unchanged */
         }
+        button {
+            background-color: #1e90ff; /* Updated to blue */
+        }
+        button.delete {
+            background-color: #ff7700; /* Updated to orange */
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -85,7 +92,8 @@
         }
         button {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #1e90ff; /* Updated to blue */
+
             color: white;
             border: none;
             border-radius: 4px;
@@ -131,8 +139,9 @@
         <div class="nav-buttons">
             <h1>Product Management</h1>
             <div>
-                <a href="admin_panel.html"><button type="button" style="background-color: #6c757d;">Back to Dashboard</button></a>
-                <a href="logout.inc.php"><button type="button" style="background-color: #dc3545;">Logout</button></a>
+                <a href="admin_panel.html"><button type="button" style="background-color: #1e90ff;">Back to Dashboard</button></a>
+                <a href="logout.inc.php"><button type="button" style="background-color: #ff7700;">Logout</button></a>
+
             </div>
         </div>
         

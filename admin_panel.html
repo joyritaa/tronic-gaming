@@ -9,8 +9,15 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #000000; /* Updated to black */
         }
+        button {
+            background-color: #1e90ff; /* Updated to blue */
+        }
+        button.logout-btn {
+            background-color: #ff7700; /* Updated to orange */
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -108,7 +115,9 @@
             <h1>Tronic Shop Admin Panel</h1>
             <div>
                 <span id="admin-name">Welcome, Admin</span>
-                <a href="logout.inc.php"><button class="logout-btn">Logout</button></a>
+            <a href="logout.inc.php"><button class="logout-btn">Logout</button></a>
+            <a href="logout.inc.php"><button class="logout-btn" style="background-color: #ff7700;">Logout</button></a>
+
             </div>
         </div>
         
