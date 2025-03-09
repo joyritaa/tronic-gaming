@@ -1,12 +1,15 @@
 <?php
+// Database connection parameters
+$serverName = "localhost";
+$dbUsername = "root";  
+$dbPassword = "";      
+$dbName = "tronic_inventory";
 
-$dsn = "mysql:host=localhost;dbname=tronic_inventory";
-$dbusername = "root";
-$dbpass = "";
+// Create connection
+$conn = mysqli_connect($serverName, $dbUsername, $dbPassword, $dbName);
 
-try {
-    $pdo = new PDO($dsn, $dbusername, $dbpass);
-    $pdo->setAttribute(PDO:: ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
+?>
