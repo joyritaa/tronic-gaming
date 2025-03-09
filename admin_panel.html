@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Gadgets Inventory</title>
+    <link href="assets/styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <h1>Tronic Gaming Inventory</h1>
+            <div class="nav-links">
+                <a href="user_view.html">Users dashboard</a>
+                <a href="admin_panel.html">Admin Panel</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Admin Dashboard</h1>
+                <div class="action-buttons">
+                    <a href="#product" class="btn btn-primary">Products</a>
+                    <a href="#users" class="btn btn-primary">Manage Users</a>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h3 class="card-title">Total Products</h3>
+                    <div class="card-value">147</div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Low Stock Items</h3>
+                    <div class="card-value" style="color: var(--warning);">12</div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Active Users</h3>
+                    <div class="card-value">523</div>
+                </div>
+            </div>
+
+            <!-- Low Stock Products Table -->
+            <div class="table-container">
+                <h2>Low Stock Products</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Stock Level</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Logitech G Pro</td>
+                            <td>Keyboards</td>
+                            <td>3</td>
+                            <td><span class="status status-low">Low Stock</span></td>
+                            <td>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Remove</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Razer DeathAdder</td>
+                            <td>Mouse</td>
+                            <td>0</td>
+                            <td><span class="status status-out">Out of Stock</span></td>
+                            <td>
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- User Management Table -->
+            <div class="table-container">
+                <h2>Recent Users</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Alex Mwakidau</td>
+                            <td>alex@outlook.com</td>
+                            <td>User</td>
+                            <td>Active</td>
+                            <td class="user-actions">
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Disable</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Musa Luku</td>
+                            <td>Musa@gmail.com</td>
+                            <td>Admin</td>
+                            <td>Active</td>
+                            <td class="user-actions">
+                                <button class="btn btn-primary">Edit</button>
+                                <button class="btn btn-danger">Disable</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <section class="management hero">
+            <h1>For admins</h1>
+            <p>Manage users and products</p>
+    </section>
+
+    <!-- Venue Navigation -->
+    <nav class="management_nav">
+        <ul>
+            <li><a href="#product">Product</a></li>
+            <li><a href="#users">Manage users</a></li>
+        </ul>
+    </nav>
+
+    <!-- Individual Venue Sections -->
+    <main class="management-container">
+    
+        <section id="product" class="management-section">
+            <h2>Play Station 5</h2>
+            <div class="management-grid">
+                <div class="management-images">
+                    <div class="main-image">
+                        <img src="assets/img/venue-gallery-4.jpg" alt="Product Image">
+                    </div>
+                </div>
+                <div class="management-info">
+                    <h3>Product features</h3>
+                    <ul>
+                        <li><i class="fas fa-users"></i>5 players can use it at a time</li>
+                    </ul>
+                    <div class="management-description">
+                        <p>Used for gaming</p>
+                    </div>
+                    <button class="btn-book">Remove this product</button>
+                    <button class="btn-book">Add thid product</button>
+                </div>
+            </div>
+        </section>
+        <script src="script.js"></script>
+</body>
+</html>
