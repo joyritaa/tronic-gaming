@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register - Tronic Gaming Management System</title>
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tronic Inventory Management</h1>
+
+        <h2>Login</h2>
+        <form id="loginForm" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <h2>Register</h2>
+        <form id="registrationForm" method="POST">
+            <label for="regUsername">Username:</label>
+            <input type="text" id="regUsername" name="username" placeholder="Choose a username" required>
+            <label for="regEmail">Email:</label>
+            <input type="email" id="regEmail" name="email" placeholder="Enter your email" required>
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword" name="password" placeholder="Choose a password" required>
+            <label for="regRole">Role:</label>
+            <select id="regRole" name="role" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
