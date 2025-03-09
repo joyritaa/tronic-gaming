@@ -14,7 +14,7 @@ switch($action) {
         $username = isset($_POST['username']) ? $_POST['username'] : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
         
-        // Query admin
+        // Query admin table without checking role
         $sql = "SELECT * FROM Admins WHERE username = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "s", $username);
@@ -24,8 +24,8 @@ switch($action) {
         if($row = mysqli_fetch_assoc($result)) {
             // Verify password (use password_verify if passwords are hashed)
             if($password == $row['password']) { // In production, use password_verify()
-                // Add role field for consistency
-                $row['role'] = 'admin';
+                // Add a role field for frontend consistency
+                $row['role'] = 'admin'; // Adding this manually since we need it in the frontend
                 echo json_encode(['success' => true, 'user' => $row]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Invalid password']);
