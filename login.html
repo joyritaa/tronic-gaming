@@ -35,8 +35,9 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            fetch('tronic gaming/backend/login.php', {
+            fetch('login.php', {
                 method: 'POST',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },

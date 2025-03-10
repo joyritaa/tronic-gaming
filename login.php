@@ -1,6 +1,7 @@
 <?php
-// login.php
-include 'db_connect.php';
+
+// connection to database
+include 'db_connection.php';
 
 // Get JSON data
 $json = file_get_contents('php://input');

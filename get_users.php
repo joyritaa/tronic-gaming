@@ -1,6 +1,6 @@
 <?php
 // connect to a database
-include 'db_connect.php';
+include 'db_connection.php';
 
 $query = "SELECT id, username, email, role, created_at FROM users ORDER BY id DESC";
 $result = mysqli_query($conn, $query);

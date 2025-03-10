@@ -1,6 +1,6 @@
 <?php
 // connection
-include 'db_connect.php';
+include 'db_connection.php';
 
 // Get  data
 $json = file_get_contents('php://input');
