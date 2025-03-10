@@ -5,7 +5,22 @@ include 'dbconnection.php';
 
 // Get JSON data
 $json = file_get_contents('php://input');
+if (empty($json)) {
+    $response = ['success' => false, 'message' => 'No input data received'];
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
+}
+
 $data = json_decode($json, true);
+
+// Check if JSON data is valid
+if ($data === null || !isset($data['username']) || !isset($data['password'])) {
+    $response = ['success' => false, 'message' => 'Invalid input data'];
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
+}
 
 // Get username and password
 $username = mysqli_real_escape_string($conn, $data['username']);
