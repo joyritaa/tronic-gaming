@@ -11,57 +11,55 @@
         <div class="logo">Tronic</div>
         <div class="user-controls">
             <div class="user-info" id="userInfo">Welcome, User</div>
-<button class="logout-btn" id="logoutBtn">Logout</button>
-
+            <button class="logout-btn" id="logoutBtn">Logout</button>
         </div>
     </header>
     
     <main>
-        <h1>Tronic Inventory</h1>
+        <h1>My Products</h1>
         
-        <div class="filter-controls">
-            <div class="filter-item">
-                <label for="categoryFilter">Category:</label>
-                <select id="categoryFilter">
-                    <option value="all">All Categories</option>
-                    <option value="Console">Consoles</option>
-                    <option value="Game">Gaming</option>
-                    <option value="Accessory">Accessories</option>
-                </select>
-            </div>
-            
-            <div class="filter-item">
-                <label for="stockFilter">Availability:</label>
-                <select id="stockFilter">
-                    <option value="all">All Items</option>
-                    <option value="inStock">In Stock Only</option>
-                    <option value="outOfStock">Out of Stock Only</option>
-                </select>
-            </div>
-            
-            <div class="filter-item">
-                <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" placeholder="Search products...">
-            </div>
+        <div class="action-bar">
+            <button id="addProductBtn">Add New Product</button>
+            <button id="refreshBtn">Refresh List</button>
         </div>
         
-        <div class="inventory-grid" id="inventoryGrid">
-<!-- Products will be dynamically added here -->
-
-    <div class="admin-card">
-        <div class="card-icon">🎮</div>
-        <h2>Product Management</h2>
-        <p>Add, edit, or remove products from the inventory system.</p>
-        <button class="card-button" id="productManagementBtn" >Manage Products</button>
-        <script>
-            document.getElementById('productManagementBtn').addEventListener('click', () => {
-                window.location.href = 'product_management.html';
-            });
-            </script>
-    </div>
-
-
-    </div>
+        <div id="productForm" class="form-container" style="display: none;">
+            <h2>Add/Edit Product</h2>
+            <form id="productFormElement">
+                <input type="hidden" id="productId" name="id">
+                <input type="hidden" id="userId" name="userId">
+                
+                <div class="form-group">
+                    <label for="productName">Product Name:</label>
+                    <input type="text" id="productName" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription">Description:</label>
+                    <textarea id="productDescription" name="description"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productPrice">Price:</label>
+                    <input type="number" id="productPrice" name="price" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productQuantity">Quantity:</label>
+                    <input type="number" id="productQuantity" name="quantity" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit">Save</button>
+                    <button type="button" id="cancelProductBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="products-list" id="productsList">
+            <!-- Products will be loaded here -->
+            <div class="loading">Loading your products...</div>
+        </div>
     </main>
     
     <script src="script.js"></script>

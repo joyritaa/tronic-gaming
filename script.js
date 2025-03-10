@@ -1,528 +1,536 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch dashboard statistics
+    fetchDashboardStats();
+    
+    // Set up logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        //  logout 
+        window.location.href = 'login.html';
+    });
+});
 
-    // Default users and admins
-    const users = [
-        { username: "user1", password: "password1", role: "user" },
-        { username: "user2", password: "password2", role: "user" },
-        { username: "user3", password: "password3", role: "user" }
-    ];
+// Function to get dashboard statistics
+function fetchDashboardStats() {
+    fetch('get_stats.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalProductsStat').textContent = data.totalProducts;
+            document.getElementById('inStockStat').textContent = data.inStock;
+            document.getElementById('outOfStockStat').textContent = data.outOfStock;
+            document.getElementById('totalUsersStat').textContent = data.totalUsers;
+        })
+        .catch(error => console.error('Error fetching stats:', error));
+}
+
+
+
+
+
+
+// product_script.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Load all products
+    loadProducts();
     
-    const admins = [
-        { username: "admin1", password: "adminpass1", role: "admin" },
-        { username: "admin2", password: "adminpass2", role: "admin" }
-    ];
-    
-    // Sample inventory data for demo purposes
-    const inventory = [
-        { id: 1, name: "PlayStation 5", category: "Console", price: 499.99, inStock: true, quantity: 15 },
-        { id: 2, name: "Xbox Series X", category: "Console", price: 499.99, inStock: true, quantity: 10 },
-        { id: 3, name: "Nintendo Switch", category: "Console", price: 299.99, inStock: true, quantity: 20 },
-        { id: 4, name: "God of War: Ragnarok", category: "Game", price: 69.99, inStock: true, quantity: 30 },
-        { id: 5, name: "Elden Ring", category: "Game", price: 59.99, inStock: true, quantity: 25 },
-        { id: 6, name: "Call of Duty: Modern Warfare III", category: "Game", price: 69.99, inStock: false, quantity: 0 },
-        { id: 7, name: "Gaming Headset Pro", category: "Accessory", price: 149.99, inStock: true, quantity: 12 },
-        { id: 8, name: "Elite Controller", category: "Accessory", price: 179.99, inStock: false, quantity: 0 },
-        { id: 9, name: "Gaming Chair", category: "Furniture", price: 249.99, inStock: true, quantity: 8 },
-        { id: 10, name: "PC Gaming Desktop", category: "Computer", price: 1499.99, inStock: true, quantity: 5 },
-    ];
-    
-    // Store data in localStorage for other pages to access
-    localStorage.setItem('inventoryData', JSON.stringify(inventory));
-    localStorage.setItem('usersData', JSON.stringify(users));
-    localStorage.setItem('adminsData', JSON.stringify(admins));
-    
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    // Set up form submission
+    document.getElementById('productFormElement').addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        // Check if the user exists in users array
-        let foundUser = users.find(user => user.username === username && user.password === password);
-        let isAdmin = false;
-        
-        // If not found in users, check in admins array
-        if (!foundUser) {
-            foundUser = admins.find(admin => admin.username === username && admin.password === password);
-            if (foundUser) {
-                isAdmin = true;
-            }
-        }
-        
-        if (foundUser) {
-            // Store login info in session
-            sessionStorage.setItem('currentUser', JSON.stringify({
-                username: foundUser.username,
-                role: foundUser.role
-            }));
+        saveProduct();
+    });
+    
+    // Set up add product button
+    document.getElementById('addProductBtn').addEventListener('click', function() {
+        showProductForm();
+    });
+    
+    // Set up cancel button
+    document.getElementById('cancelProductBtn').addEventListener('click', function() {
+        hideProductForm();
+    });
+    
+    // Set up logout
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+});
+
+function loadProducts() {
+    fetch('get_products.php')
+        .then(response => response.json())
+        .then(data => {
+            const productsList = document.getElementById('productsList');
             
-            // Redirect based on role
-            if (isAdmin) {
-                window.location.href = 'admin_panel.html';
-            } else {
-                window.location.href = 'user_view.html';
+            if (data.length === 0) {
+                productsList.innerHTML = '<p>No products found.</p>';
+                return;
             }
-        } else {
-            // Show error message
-            document.getElementById('errorMessage').style.display = 'block';
             
-            // Clear the password field
-            document.getElementById('password').value = '';
-        }
-    });
-});
+            let html = '<table class="data-table">';
+            html += '<thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th></tr></thead>';
+            html += '<tbody>';
+            
+            data.forEach(product => {
+                html += `<tr>
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>$${parseFloat(product.price).toFixed(2)}</td>
+                    <td>${product.quantity}</td>
+                    <td>
+                        <button onclick="editProduct(${product.id})">Edit</button>
+                        <button onclick="deleteProduct(${product.id})">Delete</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            productsList.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('productsList').innerHTML = '<p>Error loading products.</p>';
+        });
+}
 
-// User view
-document.addEventListener('DOMContentLoaded', function() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+function showProductForm(product = null) {
+    const form = document.getElementById('productForm');
+    form.style.display = 'block';
     
-    // If no user is logged in or the user is an admin, redirect to login page
-    if (!currentUser || currentUser.role === 'admin') {
-        window.location.href = 'login.html';
-        return;
+    // Clear form
+    document.getElementById('productId').value = '';
+    document.getElementById('productName').value = '';
+    document.getElementById('productDescription').value = '';
+    document.getElementById('productPrice').value = '';
+    document.getElementById('productQuantity').value = '';
+    
+    // If editing, fill form with product data
+    if (product) {
+        document.getElementById('productId').value = product.id;
+        document.getElementById('productName').value = product.name;
+        document.getElementById('productDescription').value = product.description;
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productQuantity').value = product.quantity;
     }
-    
-    // Update user info in header
-    document.getElementById('userInfo').textContent = `Welcome, ${currentUser.username}`;
-    
-    // Get inventory data from localStorage
-    const inventory = JSON.parse(localStorage.getItem('inventoryData'));
-    
-    // Display all products initially with action buttons
-    displayProducts(inventory);
-    addActionButtons();
-
-    
-    // Set up event listeners for filters
-    document.getElementById('categoryFilter').addEventListener('change', filterProducts);
-    document.getElementById('stockFilter').addEventListener('change', filterProducts);
-    document.getElementById('searchInput').addEventListener('input', filterProducts);
-    
-    // Logout button handler
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
-    });
-});
-
-function addActionButtons() {
-    const inventoryGrid = document.getElementById('inventoryGrid');
-    const productCards = inventoryGrid.getElementsByClassName('product-card');
-
-    Array.from(productCards).forEach(card => {
-        const productId = card.dataset.id; // Assuming each card has a data-id attribute
-        const addButton = document.createElement('button');
-        addButton.textContent = '+';
-        addButton.className = 'action-btn add-btn';
-        addButton.onclick = function() {
-            // AJAX call to add product logic here
-            console.log(`Add product with ID: ${productId}`);
-        };
-
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = '-';
-        deleteButton.className = 'action-btn delete-btn';
-        deleteButton.onclick = function() {
-            // AJAX call to delete product logic here
-            console.log(`Delete product with ID: ${productId}`);
-        };
-
-        card.appendChild(addButton);
-        card.appendChild(deleteButton);
-    });
 }
 
-function displayProducts(products) {
-
-    const inventoryGrid = document.getElementById('inventoryGrid');
-    inventoryGrid.innerHTML = '';
-    
-    if (products.length === 0) {
-        inventoryGrid.innerHTML = '<div class="no-results">No products match your search criteria.</div>';
-        return;
-    }
-    
-    products.forEach(product => {
-        productCard.className = 'product-card';
-        productCard.dataset.id = product.id; // Set data-id for action buttons
-
-
-        const productCard = document.createElement('div');
-        productCard.className = 'product-card';
-        
-        // Get emoji based on category
-        let categoryEmoji = '🎮';
-        switch (product.category) {
-            case 'Console': categoryEmoji = '🎮'; break;
-            case 'Game': categoryEmoji = '💿'; break;
-            case 'Accessory': categoryEmoji = '🎧'; break;
-        }
-        
-        productCard.innerHTML = `
-            <div class="product-img">${categoryEmoji}</div>
-            <div class="product-details">
-                <h3 class="product-name">${product.name}</h3>
-                <span class="product-category">${product.category}</span>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                <div class="stock-status ${product.inStock ? 'in-stock' : 'out-of-stock'}">
-                    ${product.inStock ? 'In Stock' : 'Out of Stock'}
-                </div>
-                ${product.inStock ? `<div class="quantity-info">Quantity available: ${product.quantity}</div>` : ''}
-            </div>
-        `;
-        
-        inventoryGrid.appendChild(productCard);
-    });
+function hideProductForm() {
+    document.getElementById('productForm').style.display = 'none';
 }
 
-function filterProducts() {
-    const categoryFilter = document.getElementById('categoryFilter').value;
-    const stockFilter = document.getElementById('stockFilter').value;
-    const searchInput = document.getElementById('searchInput').value.toLowerCase();
-    
-    // Get inventory data from localStorage
-    const inventory = JSON.parse(localStorage.getItem('inventoryData'));
-    
-    // Apply filters
-    const filteredProducts = inventory.filter(product => {
-        // Category filter
-        if (categoryFilter !== 'all' && product.category !== categoryFilter) {
-            return false;
-        }
-        
-        // Stock filter
-        if (stockFilter === 'inStock' && !product.inStock) {
-            return false;
-        }
-        if (stockFilter === 'outOfStock' && product.inStock) {
-            return false;
-        }
-        
-        // Search filter
-        if (searchInput && !product.name.toLowerCase().includes(searchInput) && 
-            !product.category.toLowerCase().includes(searchInput)) {
-            return false;
-        }
-        
-        return true;
-    });
-    
-    // Display filtered products
-    displayProducts(filteredProducts);
-}
-
-// Admin panel
-document.addEventListener('DOMContentLoaded', function() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    
-    // If no user is logged in or the user is not an admin, redirect to login page
-    if (!currentUser || currentUser.role !== 'admin') {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Update user info in header
-    document.getElementById('userInfo').textContent = `Welcome, ${currentUser.username}`;
-    
-    // Load inventory and user data
-    const inventory = JSON.parse(localStorage.getItem('inventoryData'));
-    const users = JSON.parse(localStorage.getItem('usersData'));
-    const admins = JSON.parse(localStorage.getItem('adminsData'));
-    
-    // Update stats
-    updateStats(inventory, users, admins);
-    
-    // Set up event listeners
-    document.getElementById('userManagementBtn').addEventListener('click', function() {
-        // AJAX call to fetch user management page
-        fetch('includes/user/add_user.php')
-            .then(response => response.text())
-            .then(data => {
-                // Handle the response data (e.g., display in a modal or redirect)
-                console.log(data);
-            })
-            .catch(error => console.error('Error:', error));
-    });
-    
-    document.getElementById('productManagementBtn').addEventListener('click', function() {
-        // AJAX call to fetch product management page
-        fetch('includes/products/add_products.php')
-            .then(response => response.text())
-            .then(data => {
-                // Handle the response data (e.g., display in a modal or redirect)
-                console.log(data);
-            })
-            .catch(error => console.error('Error:', error));
-    });
-    
-    // Logout button handler
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
-    });
-});
-
-function updateStats(inventory, users, admins) {
-    // Count total products
-    const totalProducts = inventory.length;
-    document.getElementById('totalProductsStat').textContent = totalProducts;
-    
-    // Count in stock products
-    const inStockProducts = inventory.filter(product => product.inStock).length;
-    document.getElementById('inStockStat').textContent = inStockProducts;
-    
-    // Count out of stock products
-    const outOfStockProducts = inventory.filter(product => !product.inStock).length;
-    document.getElementById('outOfStockStat').textContent = outOfStockProducts;
-    
-    // Count total users (including admins)
-    const totalUsers = users.length + admins.length;
-    document.getElementById('totalUsersStat').textContent = totalUsers;
-}
-
-// User management
-document.addEventListener('DOMContentLoaded', function() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    
-    // If no user is logged in or the user is not an admin, redirect to login page
-    if (!currentUser || currentUser.role !== 'admin') {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Load user data
-    const users = JSON.parse(localStorage.getItem('usersData'));
-    const admins = JSON.parse(localStorage.getItem('adminsData'));
-    
-    // Display all users
-    displayUsers(users, admins);
-    
-    // Set up event listeners
-    document.getElementById('userForm').addEventListener('submit', handleUserFormSubmit);
-    document.getElementById('searchUsers').addEventListener('input', handleUserSearch);
-    document.getElementById('backBtn').addEventListener('click', function() {
-        window.location.href = 'admin_panel.html';
-    });
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        sessionStorage.removeItem('currentUser');
-        window.location.href = 'login.html';
-    });
-});
-
-function displayUsers(users, admins) {
-    const tableBody = document.getElementById('usersTableBody');
-    tableBody.innerHTML = '';
-    
-    // Display admins
-    admins.forEach((admin, index) => {
-        const row = document.createElement('tr');
-        
-        row.innerHTML = `
-            <td>${admin.username}</td>
-            <td><span class="admin-badge">Admin</span></td>
-            <td>
-                <button class="action-btn edit-btn" data-type="admin" data-index="${index}">Edit</button>
-                <button class="action-btn delete-btn" data-type="admin" data-index="${index}">Delete</button>
-            </td>
-        `;
-        
-        tableBody.appendChild(row);
-    });
-    
-    // Display regular users
-    users.forEach((user, index) => {
-        const row = document.createElement('tr');
-        
-        row.innerHTML = `
-            <td>${user.username}</td>
-            <td><span class="user-badge">User</span></td>
-            <td>
-                <button class="action-btn edit-btn" data-type="user" data-index="${index}">Edit</button>
-                <button class="action-btn delete-btn" data-type="user" data-index="${index}">Delete</button>
-            </td>
-        `;
-        
-        tableBody.appendChild(row);
-    });
-    
-    // Add event listeners to edit and delete buttons
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', handleEditUser);
-    });
-    
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', handleDeleteUser);
-    });
-}
-
-function handleUserFormSubmit(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const role = document.getElementById('userRole').value;
-    const editUserId = document.getElementById('editUserId').value;
-    
-    // Prepare data for AJAX request
-    const userData = {
-        username: username,
-        password: password,
-        role: role,
-        editUserId: editUserId
+function saveProduct() {
+    const productId = document.getElementById('productId').value;
+    const productData = {
+        id: productId,
+        name: document.getElementById('productName').value,
+        description: document.getElementById('productDescription').value,
+        price: document.getElementById('productPrice').value,
+        quantity: document.getElementById('productQuantity').value
     };
     
-    // AJAX call to add or edit user
-    const url = editUserId ? 'includes/user/edit_user.php' : 'includes/user/add_user.php';
-    fetch(url, {
+    fetch('save_product.php', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            hideProductForm();
+            loadProducts();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving product');
+    });
+}
+
+function editProduct(id) {
+    fetch(`get_products.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            showProductForm(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading product data');
+        });
+}
+
+function deleteProduct(id) {
+    if (confirm('Are you sure you want to delete this product?')) {
+        fetch(`delete_product.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadProducts();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting product');
+            });
+    }
+}
+
+
+
+
+
+
+// user_script.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Load all users
+    loadUsers();
+    
+    // Set up form submission
+    document.getElementById('userFormElement').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveUser();
+    });
+    
+    // Set up add user button
+    document.getElementById('addUserBtn').addEventListener('click', function() {
+        showUserForm();
+    });
+    
+    // Set up cancel button
+    document.getElementById('cancelUserBtn').addEventListener('click', function() {
+        hideUserForm();
+    });
+    
+    // Set up logout
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+});
+
+function loadUsers() {
+    fetch('get_users.php')
+        .then(response => response.json())
+        .then(data => {
+            const usersList = document.getElementById('usersList');
+            
+            if (data.length === 0) {
+                usersList.innerHTML = '<p>No users found.</p>';
+                return;
+            }
+            
+            let html = '<table class="data-table">';
+            html += '<thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Created At</th><th>Actions</th></tr></thead>';
+            html += '<tbody>';
+            
+            data.forEach(user => {
+                html += `<tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                    <td>${user.created_at}</td>
+                    <td>
+                        <button onclick="editUser(${user.id})">Edit</button>
+                        <button onclick="deleteUser(${user.id})">Delete</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            usersList.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('usersList').innerHTML = '<p>Error loading users.</p>';
+        });
+}
+
+function showUserForm(user = null) {
+    const form = document.getElementById('userForm');
+    form.style.display = 'block';
+    
+    // Clear form
+    document.getElementById('userId').value = '';
+    document.getElementById('username').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('role').value = 'user';
+    
+    // If editing, fill form with user data
+    if (user) {
+        document.getElementById('userId').value = user.id;
+        document.getElementById('username').value = user.username;
+        document.getElementById('email').value = user.email;
+        document.getElementById('role').value = user.role;
+        // Don't fill password - it should be empty when editing
+    }
+}
+
+function hideUserForm() {
+    document.getElementById('userForm').style.display = 'none';
+}
+
+function saveUser() {
+    const userId = document.getElementById('userId').value;
+    const userData = {
+        id: userId,
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        role: document.getElementById('role').value
+    };
+    
+    fetch('save_user.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData)
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showSuccessMessage(data.message);
-            // Update user display
-            displayUsers(data.users, data.admins);
+            hideUserForm();
+            loadUsers();
         } else {
-            showErrorMessage(data.message);
+            alert('Error: ' + data.message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving user');
+    });
 }
 
-function handleEditUser(e) {
-    const type = e.target.dataset.type;
-    const index = e.target.dataset.index;
-    
-    // Load user data
-    const users = JSON.parse(localStorage.getItem('usersData'));
-    const admins = JSON.parse(localStorage.getItem('adminsData'));
-    
-    // Get user to edit
-    const userData = type === 'user' ? users[index] : admins[index];
-    
-    // Fill form with user data
-    document.getElementById('username').value = userData.username;
-    document.getElementById('password').value = userData.password;
-    document.getElementById('userRole').value = userData.role;
-    document.getElementById('editUserId').value = `${type}-${index}`;
-    
-    // Update form title and button
-    document.getElementById('formTitle').textContent = 'Edit User';
-    document.getElementById('submitBtn').textContent = 'Update User';
-    
-    // Scroll to form
-    document.querySelector('.user-form-section').scrollIntoView({ behavior: 'smooth' });
+function editUser(id) {
+    fetch(`get_users.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            showUserForm(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading user data');
+        });
 }
 
-function handleDeleteUser(e) {
-    if (!confirm('Are you sure you want to delete this user?')) {
-        return;
+function deleteUser(id) {
+    if (confirm('Are you sure you want to delete this user?')) {
+        fetch(`delete_user.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadUsers();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting user');
+            });
     }
-    
-    const type = e.target.dataset.type;
-    const index = e.target.dataset.index;
-    
-    // Load user data
-    const users = JSON.parse(localStorage.getItem('usersData'));
-    const admins = JSON.parse(localStorage.getItem('adminsData'));
-    
-    // Current logged in user
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    
-    // Check if user is trying to delete themselves
-    const targetUsername = type === 'user' ? users[index].username : admins[index].username;
-    if (targetUsername === currentUser.username) {
-        showErrorMessage('You cannot delete your own account while logged in');
-        return;
-    }
-    
-    // Remove user
-    if (type === 'user') {
-        users.splice(index, 1);
-    } else {
-        admins.splice(index, 1);
-    }
-    
-    // Update display
-    displayUsers(users, admins);
-    
-    showSuccessMessage('User deleted successfully');
 }
 
-function handleDeleteProduct(productId) {
-    if (!confirm('Are you sure you want to delete this product?')) {
-        return;
-    }
 
-    // AJAX call to delete product
-    const url = `includes/products/delete_product.php?id=${productId}`;
-    fetch(url, {
-        method: 'DELETE',
+
+
+
+//user_productjs
+document.addEventListener('DOMContentLoaded', function() {
+    // Get logged in user ID from session or localStorage we'll simulate with a fixed ID
+    const currentUserId = getUserIdFromSession(); // get the ID from your auth system
+    
+    // Set the user ID field value
+    document.getElementById('userId').value = currentUserId;
+    
+    // Display username in header
+    fetchUserInfo(currentUserId);
+    
+    // Load products for this user
+    loadUserProducts(currentUserId);
+    
+    // Set up form submission
+    document.getElementById('productFormElement').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveProduct(currentUserId);
+    });
+    
+    // Set up add product button
+    document.getElementById('addProductBtn').addEventListener('click', function() {
+        showProductForm();
+    });
+    
+    // Set up cancel button
+    document.getElementById('cancelProductBtn').addEventListener('click', function() {
+        hideProductForm();
+    });
+    
+    // Set up refresh button
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+        loadUserProducts(currentUserId);
+    });
+    
+    // Set up logout
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        // Clear user session/local storage
+        localStorage.removeItem('userId');
+        window.location.href = 'login.html';
+    });
+});
+
+// This is a placeholder based on the auth system
+function getUserIdFromSession() {
+    // In a real app, get from session or localStorage
+    return localStorage.getItem('userId') || 1; // Fallback to ID 1 for testing
+}
+
+function fetchUserInfo(userId) {
+    fetch(`get_user_info.php?id=${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('userInfo').textContent = `Welcome, ${data.username}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching user info:', error);
+        });
+}
+
+function loadUserProducts(userId) {
+    fetch(`get_user_products.php?userId=${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            const productsList = document.getElementById('productsList');
+            
+            if (data.length === 0) {
+                productsList.innerHTML = '<p>You haven\'t added any products yet.</p>';
+                return;
+            }
+            
+            let html = '<table class="data-table">';
+            html += '<thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th></tr></thead>';
+            html += '<tbody>';
+            
+            data.forEach(product => {
+                html += `<tr>
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>$${parseFloat(product.price).toFixed(2)}</td>
+                    <td>${product.quantity}</td>
+                    <td>
+                        <button onclick="editProduct(${product.id})">Edit</button>
+                        <button onclick="deleteProduct(${product.id})">Delete</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            productsList.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('productsList').innerHTML = '<p>Error loading products.</p>';
+        });
+}
+
+function showProductForm(product = null) {
+    const form = document.getElementById('productForm');
+    form.style.display = 'block';
+    
+    // Clear form
+    document.getElementById('productId').value = '';
+    document.getElementById('productName').value = '';
+    document.getElementById('productDescription').value = '';
+    document.getElementById('productPrice').value = '';
+    document.getElementById('productQuantity').value = '';
+    
+    // If editing, fill form with product data
+    if (product) {
+        document.getElementById('productId').value = product.id;
+        document.getElementById('productName').value = product.name;
+        document.getElementById('productDescription').value = product.description;
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productQuantity').value = product.quantity;
+    }
+}
+
+function hideProductForm() {
+    document.getElementById('productForm').style.display = 'none';
+}
+
+function saveProduct(userId) {
+    const productId = document.getElementById('productId').value;
+    const productData = {
+        id: productId,
+        userId: userId,
+        name: document.getElementById('productName').value,
+        description: document.getElementById('productDescription').value,
+        price: document.getElementById('productPrice').value,
+        quantity: document.getElementById('productQuantity').value
+    };
+    
+    fetch('save_user_product.php', {
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData)
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showSuccessMessage(data.message);
-            // Optionally, refresh the product list
-            displayProducts(data.products);
+            hideProductForm();
+            loadUserProducts(userId);
         } else {
-            showErrorMessage(data.message);
+            alert('Error: ' + data.message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving product');
+    });
 }
 
-function handleUserSearch(e) {
-    const searchQuery = e.target.value.toLowerCase();
-    
-    // Load user data
-    const users = JSON.parse(localStorage.getItem('usersData'));
-    const admins = JSON.parse(localStorage.getItem('adminsData'));
-    
-    // Filter users
-    const filteredUsers = users.filter(user => 
-        user.username.toLowerCase().includes(searchQuery)
-    );
-    
-    // Filter admins
-    const filteredAdmins = admins.filter(admin => 
-        admin.username.toLowerCase().includes(searchQuery)
-    );
-    
-    // Update display
-    displayUsers(filteredUsers, filteredAdmins);
+function editProduct(id) {
+    fetch(`get_products.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            // Check if this user owns this product
+            const currentUserId = getUserIdFromSession();
+            if (data.user_id != currentUserId) {
+                alert('You can only edit your own products');
+                return;
+            }
+            
+            showProductForm(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading product data');
+        });
 }
 
-function showSuccessMessage(message) {
-    const successMsg = document.getElementById('successMessage');
-    const errorMsg = document.getElementById('errorMessage');
-    
-    successMsg.textContent = message;
-    successMsg.style.display = 'block';
-    errorMsg.style.display = 'none';
-    
-    setTimeout(() => {
-        successMsg.style.display = 'none';
-    }, 3000);
-}
-
-function showErrorMessage(message) {
-    const successMsg = document.getElementById('successMessage');
-    const errorMsg = document.getElementById('errorMessage');
-    
-    errorMsg.textContent = message;
-    errorMsg.style.display = 'block';
-    successMsg.style.display = 'none';
-    
-    setTimeout(() => {
-        errorMsg.style.display = 'none';
-    }, 3000);
+function deleteProduct(id) {
+    if (confirm('Are you sure you want to delete this product?')) {
+        const userId = getUserIdFromSession();
+        
+        fetch(`delete_user_product.php?id=${id}&userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadUserProducts(userId);
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting product');
+            });
+    }
 }
