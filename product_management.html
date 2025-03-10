@@ -10,86 +10,78 @@
     <header>
         <div class="logo"> Tronic</div>
         <div class="user-info">
-            <span>Admin User</span>
+            <span>Welcome to Tronic</span>
         </div>
     </header>
-    
-    <div class="container">
         
-            <div class="menu-item active">
-                <i class="fas fa-box"></i>
-                <span>Products</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-tags"></i>
-                <span>Categories</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-chart-bar"></i>
-                <span>Analytics</span>
-            </div>
-            <div class="menu-item">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </div>
+    <div class="main-content">
+        <div class="page-title">
+            <h1>Product Management</h1>
+            <button class="add-product-btn" onclick="openModal()">
+                <i class="fas fa-plus"></i>
+                <span>+</span>
+            </button>
+        </div>
         
-        <div class="main-content">
-            <div class="page-title">
-                <h1>Product Management</h1>
-                <button class="add-product-btn" onclick="openModal()">
-                    <i class="fas fa-plus"></i>
-                    <span>Add Product</span>
-                </button>
+        <div class="search-filter">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search products...">
             </div>
-            
-            <div class="search-filter">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search products...">
-                </div>
-                <select class="filter-dropdown">
-                    <option value="all">All Status</option>
-                    <option value="in-stock">In Stock</option>
-                    <option value="out-of-stock">Out of Stock</option>
-                    <option value="low-stock">Low Stock</option>
-                </select>
-                <select class="filter-dropdown">
-                    <option value="all">All Categories</option>
-                    <option value="electronics">Conosles</option>
-                    <option value="clothing">Gaming</option>
-                    <option value="furniture">Accessories</option>
-                </select>
-            </div>
-            
-            <table class="product-table">
-                <thead>
-                    <tr>
-                        <th>product Name</th>
-                        <th>prod_desc</th>
-                        <th>category</th>
-                        <th>price</th>
-                        <th>stock_quantity</th>
-                        <th>manufacurer</th>
-                        <th>release_date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                       //whatever is on the product table in html
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="pagination">
-                <div class="pagination-info">Showing 1-5 of 24 items</div>
-                <div class="pagination-controls">
-                    <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="pagination-btn active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
+            <select class="filter-dropdown">
+                <option value="all">All Status</option>
+                <option value="in-stock">In Stock</option>
+                <option value="out-of-stock">Out of Stock</option>
+                <option value="low-stock">Low Stock</option>
+            </select>
+            <select class="filter-dropdown">
+                <option value="all">All Categories</option>
+                <option value="electronics">Consoles</option>
+                <option value="clothing">Gaming</option>
+                <option value="furniture">Accessories</option>
+            </select>
+        </div>
+        
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock Quantity</th>
+                    <th>Manufacturer</th>
+                    <th>Release Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody" class="product-table-body">
+
+                <!-- Product rows will be dynamically populated here -->
+                <tr> 
+                    <td>Sample Product</td>
+                    <td>Sample Description</td>
+                    <td>Sample Category</td>
+                    <td>100</td>
+                    <td>10</td>
+                    <td>Sample Manufacturer</td>
+                    <td>2023-01-01</td>
+                    <td>
+                        <button onclick="openModal(true, {id: 1, prod_name: 'Sample Product', prod_description: 'SP001', category: 'Sample Category', price: 100, stock_quantity: 10, manufacturer: 'Sample Description', inStock: true})">Edit</button>
+                        <button onclick="deleteProduct(1)">-</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="pagination">
+            <div class="pagination-info">Showing 1-5 of 24 items</div>
+            <div class="pagination-controls">
+                <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -145,14 +137,17 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button class="delete-btn" onclick="deleteProduct()">Delete Product</button>
                 <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-<button class="save-btn" onclick="addProduct()">Save Product</button>
-
+                <button class="save-btn" onclick="addProduct()">Save Product</button>
+                <button class="edit-btn" onclick="editProduct()">Edit Product</button>
             </div>
         </div>
     </div>
     
 <script>
+    let selectedProductId = null; // Variable to store the selected product ID for editing/deleting
+
     function addProduct() {
         const productData = {
             name: document.getElementById('productName').value,
@@ -177,7 +172,6 @@
         .then(data => {
             if (data.success) {
                 showSuccessMessage(data.message);
-                // Optionally, refresh the product list or close the modal
                 closeModal();
             } else {
                 showErrorMessage(data.message);
@@ -186,42 +180,115 @@
         .catch(error => console.error('Error:', error));
     }
 
-        // Modal functionality
-        const modal = document.getElementById('productModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const stockToggle = document.getElementById('stockToggle');
-        const stockStatusLabel = document.getElementById('stockStatusLabel');
-        
-        function openModal(isEdit = false) {
-            modal.style.display = 'flex';
-            if (isEdit) {
-                modalTitle.textContent = 'Edit Product';
-                // Here you would normally populate the form with the product data
-            } else {
-                modalTitle.textContent = 'Add New Product';
-                // Reset form
-            }
-        }
-        
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-        
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target === modal) {
+    function editProduct() {
+        const productData = {
+            id: selectedProductId, // Include the product ID for editing
+            name: document.getElementById('productName').value,
+            description: document.getElementById('productDescription').value,
+            category: document.getElementById('productCategory').value,
+            price: parseFloat(document.getElementById('productPrice').value),
+            stock: parseInt(document.getElementById('productStock').value),
+            manufacturer: document.getElementById('productManufacturer').value,
+            releaseDate: document.getElementById('productReleaseDate').value,
+            inStock: document.getElementById('stockToggle').checked
+            
+        };
+
+        // AJAX call to update product
+        const url = 'includes/products/edit_product.php';
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessMessage(data.message);
                 closeModal();
-            }
-        }
-        
-        // Toggle stock status
-        stockToggle.addEventListener('change', function() {
-            if (this.checked) {
-                stockStatusLabel.textContent = 'In Stock';
             } else {
-                stockStatusLabel.textContent = 'Out of Stock';
+                showErrorMessage(data.message);
             }
-        });
-    </script>
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function deleteProduct(productId) {
+        const url = 'includes/products/delete_product.php';
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: productId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessMessage(data.message);
+                closeModal();
+            } else {
+                showErrorMessage(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Modal functionality
+    const modal = document.getElementById('productModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const stockToggle = document.getElementById('stockToggle');
+    const stockStatusLabel = document.getElementById('stockStatusLabel');
+    
+    function openModal(isEdit = false, product = null) {
+        modal.style.display = 'flex';
+        if (isEdit && product) {
+            selectedProductId = product.id; // Set the selected product ID
+            modalTitle.textContent = 'Edit Product';
+            // Populate the form with the product data
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productManufacturer').value = product.manufacturer;
+            document.getElementById('productReleaseDate').value = product.releaseDate;
+            document.getElementById('stockToggle').checked = product.inStock;
+        } else {
+            modalTitle.textContent = 'Add New Product';
+            selectedProductId = null; // Reset the selected product ID
+            // Reset form
+            document.getElementById('productName').value = '';
+            document.getElementById('productSKU').value = '';
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productStock').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('stockToggle').checked = true;
+        }
+    }
+    
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+    
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+    
+    // Toggle stock status
+    stockToggle.addEventListener('change', function() {
+        if (this.checked) {
+            stockStatusLabel.textContent = 'In Stock';
+        } else {
+            stockStatusLabel.textContent = 'Out of Stock';
+        }
+    });
+</script>
 </body>
 </html>
