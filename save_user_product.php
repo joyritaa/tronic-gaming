@@ -1,5 +1,5 @@
 <?php
-// connect to database
+//connect to database
 include 'dbconnection.php';
 
 // Get JSON data
@@ -8,11 +8,11 @@ $data = json_decode($json, true);
 
 // Sanitize inputs
 $id = isset($data['id']) && !empty($data['id']) ? mysqli_real_escape_string($conn, $data['id']) : null;
-$userId = mysqli_real_escape_string($conn, $data['userId']);
-$name = mysqli_real_escape_string($conn, $data['name']);
-$description = mysqli_real_escape_string($conn, $data['description']);
-$price = mysqli_real_escape_string($conn, $data['price']);
-$quantity = mysqli_real_escape_string($conn, $data['quantity']);
+$userId = isset($data['userId']) && !empty($data['userId']) ? mysqli_real_escape_string($conn, $data['userId']) : null;
+$name = isset($data['name']) && !empty($data['name']) ? mysqli_real_escape_string($conn, $data['name']) : null;
+$description = isset($data['description']) && !empty($data['description']) ? mysqli_real_escape_string($conn, $data['description']) : null;
+$price = isset($data['price']) && !empty($data['price']) ? mysqli_real_escape_string($conn, $data['price']) : null;
+$quantity = isset($data['quantity']) && !empty($data['quantity']) ? mysqli_real_escape_string($conn, $data['quantity']) : null;
 
 $response = ['success' => false];
 
