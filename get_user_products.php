@@ -1,6 +1,6 @@
 <?php
 // connect to database
-include 'db_connection.php';
+include 'dbconnection.php';
 
 if (isset($_GET['userId'])) {
     $userId = mysqli_real_escape_string($conn, $_GET['userId']);

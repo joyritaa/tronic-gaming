@@ -1,6 +1,6 @@
 <?php
 //connection to database
-include "db_connection.php";
+include "dbconnection.php";
 
 // Set headers for JSON response
 header('Content-Type: application/json');
