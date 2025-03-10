@@ -744,7 +744,7 @@ main.login-main {
 .product-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    background-color: var(--card-bg);
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     border-radius: 4px;
     overflow: hidden;
@@ -755,15 +755,17 @@ main.login-main {
     color: var(--secondary-orange);
     text-align: left;
     padding: 1rem;
+    font-weight: bold;
 }
 
 .product-table tr:nth-child(even) {
-    background-color: var(--dark-blue);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .product-table td {
     padding: 0.8rem 1rem;
     border-bottom: 1px solid #eee;
+    color: var(--light-text);
 }
 
 .stock-status {

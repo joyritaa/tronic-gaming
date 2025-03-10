@@ -17,10 +17,11 @@
     <div class="main-content">
         <div class="page-title">
             <h1>Product Management</h1>
-            <button class="add-product-btn" onclick="openModal()">
-                <i class="fas fa-plus"></i>
-                <span>+</span>
-            </button>
+                <button class="add-product-btn" onclick="openModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Product</span>
+                </button>
+
         </div>
         
         <div class="search-filter">
@@ -137,7 +138,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="delete-btn" onclick="deleteProduct()">Delete Product</button>
+                <button class="delete-btn" onclick="deleteProduct(selectedProductId)">Delete Product</button>
+
                 <button class="cancel-btn" onclick="closeModal()">Cancel</button>
                 <button class="save-btn" onclick="addProduct()">Save Product</button>
                 <button class="edit-btn" onclick="editProduct()">Edit Product</button>
@@ -145,150 +147,6 @@
         </div>
     </div>
     
-<script>
-    let selectedProductId = null; // Variable to store the selected product ID for editing/deleting
-
-    function addProduct() {
-        const productData = {
-            name: document.getElementById('productName').value,
-            sku: document.getElementById('productSKU').value,
-            category: document.getElementById('productCategory').value,
-            price: parseFloat(document.getElementById('productPrice').value),
-            stock: parseInt(document.getElementById('productStock').value),
-            description: document.getElementById('productDescription').value,
-            inStock: document.getElementById('stockToggle').checked
-        };
-
-        // AJAX call to add product
-        const url = 'includes/products/add_product.php';
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showSuccessMessage(data.message);
-                closeModal();
-            } else {
-                showErrorMessage(data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function editProduct() {
-        const productData = {
-            id: selectedProductId, // Include the product ID for editing
-            name: document.getElementById('productName').value,
-            description: document.getElementById('productDescription').value,
-            category: document.getElementById('productCategory').value,
-            price: parseFloat(document.getElementById('productPrice').value),
-            stock: parseInt(document.getElementById('productStock').value),
-            manufacturer: document.getElementById('productManufacturer').value,
-            releaseDate: document.getElementById('productReleaseDate').value,
-            inStock: document.getElementById('stockToggle').checked
-            
-        };
-
-        // AJAX call to update product
-        const url = 'includes/products/edit_product.php';
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showSuccessMessage(data.message);
-                closeModal();
-            } else {
-                showErrorMessage(data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function deleteProduct(productId) {
-        const url = 'includes/products/delete_product.php';
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: productId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showSuccessMessage(data.message);
-                closeModal();
-            } else {
-                showErrorMessage(data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    // Modal functionality
-    const modal = document.getElementById('productModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const stockToggle = document.getElementById('stockToggle');
-    const stockStatusLabel = document.getElementById('stockStatusLabel');
-    
-    function openModal(isEdit = false, product = null) {
-        modal.style.display = 'flex';
-        if (isEdit && product) {
-            selectedProductId = product.id; // Set the selected product ID
-            modalTitle.textContent = 'Edit Product';
-            // Populate the form with the product data
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productDescription').value = product.description;
-            document.getElementById('productCategory').value = product.category;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productStock').value = product.stock;
-            document.getElementById('productManufacturer').value = product.manufacturer;
-            document.getElementById('productReleaseDate').value = product.releaseDate;
-            document.getElementById('stockToggle').checked = product.inStock;
-        } else {
-            modalTitle.textContent = 'Add New Product';
-            selectedProductId = null; // Reset the selected product ID
-            // Reset form
-            document.getElementById('productName').value = '';
-            document.getElementById('productSKU').value = '';
-            document.getElementById('productCategory').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productStock').value = '';
-            document.getElementById('productDescription').value = '';
-            document.getElementById('stockToggle').checked = true;
-        }
-    }
-    
-    function closeModal() {
-        modal.style.display = 'none';
-    }
-    
-    // Close modal when clicking outside of it
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            closeModal();
-        }
-    }
-    
-    // Toggle stock status
-    stockToggle.addEventListener('change', function() {
-        if (this.checked) {
-            stockStatusLabel.textContent = 'In Stock';
-        } else {
-            stockStatusLabel.textContent = 'Out of Stock';
-        }
-    });
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
